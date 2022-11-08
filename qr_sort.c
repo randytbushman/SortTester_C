@@ -48,9 +48,13 @@ void qr_sort(int *arr, int n, int divisor)
         for(i = n - 1; i > -1; --i)
             arr[--countingArr[(shadowArr[i] - minValue) / divisor]] = shadowArr[i];
     }
-    else
-        for(i = 0; i < n; ++i)
+    else {
+        for (i = 0; i < n; ++i)
             arr[i] = shadowArr[i];
+    }
+    free(shadowArr);
+    free(countingArr);
+
 }
 
 void qr_sort_min_value_zero(int *arr, int n, int divisor)
