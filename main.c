@@ -25,6 +25,8 @@ int algorithm_count = 0;                            // The number of algorithms 
 int main() {
     srand(0);
 
+    // START - ARGUMENTS THAT USER-TESTER CAN CHANGE
+
     int num_trials = 50;            // The number of trials per array length
 
     int initial_length   = 500;         // The initial (smallest) array size to be tested
@@ -32,8 +34,6 @@ int main() {
     int length_increment = 100;         // After the trial sessions are complete, increment the next array size by this value
 
     int min_number = 0, max_number = 500;   // The minimum and maximum values in the arrays
-    int *arr = NULL;        // The array of ints to be copied
-    int *copy_arr = NULL;   // This array references (copies) the int values in arr at each new trial
 
     // Add new test method for each sorting algorithm
     add_sort_method("Merge Sort", test_mergesort);
@@ -41,9 +41,14 @@ int main() {
     add_sort_method("Counting Sort", test_counting_sort);
     add_sort_method("Radix Sort", test_radix_sort);
     add_sort_method("QR Sort", test_qr_sort);
-    printf("%s\n", csv_column_str);
+
+    // END - ARGUMENTS THAT USER-TESTER CAN CHANGE
+
+    printf("%s\n", csv_column_str);     // Prints the column headers to std_output
 
     int i, j;
+    int *arr = NULL;        // The array of ints to be copied
+    int *copy_arr = NULL;   // This array references (copies) the int values in arr at each new trial
     for(int arr_length = initial_length; arr_length <= max_length; arr_length += length_increment) {
         arr = malloc(arr_length * sizeof (int));
         copy_arr = malloc(arr_length * sizeof (int));
