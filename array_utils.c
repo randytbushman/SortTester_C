@@ -12,6 +12,7 @@ void clone_array(const int *arr, int *clone_arr, int n) {
 }
 
 int generate_random_number(int min, int max) {
+    // https://forums.codeguru.com/showthread.php?534679-Generating-big-random-numbers-in-C
     return ((((rand() & 0xff)<<8 | (rand() & 0xff))<<8 | (rand() & 0xff))<<7 | (rand() & 127)) % (max + 1 - min) + min;
 }
 
