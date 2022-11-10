@@ -19,7 +19,8 @@ void lin_space(int *arr, int n, int min, int max) {
     arr[0] = min;
     arr[n - 1] = max;
     for(int i = 1; i < n - 1; ++i)
-        arr[i] = (i * ((max - min) / n)) + arr[0];
+        arr[i] = (int) (i * ((max - min) / (double) n)) + arr[0];
+
 }
 
 void print_int_array(int *arr, int n) {
