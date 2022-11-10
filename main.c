@@ -18,13 +18,14 @@ double test_qr_sort(int *, int *, int);
 void add_sort_method(char[], double (*)());
 
 double (*sorting_testers[MAX_ALGORITHM_COUNT])();   // Create array of test methods for each algorithm
+double algorithm_times[MAX_ALGORITHM_COUNT] = {0};  // Initialize each measured time to zero
 char csv_column_str[] = "Array Length";             // The csv column string. Appended each time an algorithm is added
 int algorithm_count = 0;                            // The number of algorithms to be tested. Incremented each time an algorithm is added
 
 int main() {
     srand(0);
 
-    int num_trials = 50;
+    int num_trials = 50;            // The number of trials per array length
 
     int initial_length   = 500;         // The initial (smallest) array size to be tested
     int max_length       = 10000;    // The maximum array size to be tested
@@ -43,16 +44,16 @@ int main() {
     printf("%s\n", csv_column_str);
 
     int i, j;
-    double algorithm_times[algorithm_count]; for (i = 0; i < algorithm_count; ++i) { algorithm_times[i] = 0.0; }
     for(int arr_length = initial_length; arr_length <= max_length; arr_length += length_increment) {
         arr = malloc(arr_length * sizeof (int));
         copy_arr = malloc(arr_length * sizeof (int));
-        lin_space(arr, arr_length, min_number, max_number);
+        lin_space(arr, arr_length, min_number, max_number);     // Populate arr with linearly spaced values between min_number and max_number
 
-        // Perform trials. Every algorithm sorts the same array sequence. After each trial, the array is shuffled.
+        // Each algorithm sorts the same array sequence on each trial; after each trial, the array is shuffled
         for (i = 0; i < num_trials; ++i) {
             shuffle(arr, arr_length);   // Array is shuffled for each trial
             for (j = 0; j < algorithm_count; ++j) {
+                // algorithm_times[j] represents the sum of the times it takes for sort_testers[j] to complete
                 algorithm_times[j] += (*sorting_testers[j])(arr, copy_arr, arr_length);
             }
         }
