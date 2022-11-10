@@ -70,6 +70,7 @@ int main() {
         }
         printf("\n");
 
+        // Memory is freed; size is increased and reallocated
         free(arr);
         free(copy_arr);
     }
