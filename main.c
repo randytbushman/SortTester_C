@@ -27,13 +27,13 @@ int main() {
 
     // START - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
-    int num_trials = 50;            // The number of trials per array length
+    int num_trials = 10;            // The number of trials per array length
 
-    int initial_length   = 500;         // The initial (smallest) array size to be tested
+    int initial_length   = 1000;         // The initial (smallest) array size to be tested
     int max_length       = 10000;    // The maximum array size to be tested
-    int length_increment = 100;         // After the trial sessions are complete, increment the next array size by this value
+    int length_increment = 50;         // After the trial sessions are complete, increment the next array size by this value
 
-    int min_number = 0, max_number = 500;   // The minimum and maximum values in the arrays
+    int min_number = 0, max_number = 500000;   // The minimum and maximum values in the arrays
 
     // Add new test method for each sorting algorithm
     add_sort_method("Merge Sort", test_mergesort);
@@ -63,17 +63,17 @@ int main() {
             }
         }
 
-        // Memory is freed; size is increased and reallocated at next arr_length iteration
-        free(arr);
-        free(copy_arr);
-
         // Print the average time for each algorithm trial
         printf("%d", arr_length);
         for (i = 0; i < algorithm_count; ++i) {
-            printf(", %f", algorithm_times[i] / num_trials);
+            printf(", %f", 1000 * algorithm_times[i] / num_trials);
             algorithm_times[i] = 0.0;   // Reset algorithm time after print
         }
         printf("\n");
+
+        // Memory is freed; size is increased and reallocated at next arr_length iteration
+        free(arr);
+        free(copy_arr);
     }
     return 0;
 }
