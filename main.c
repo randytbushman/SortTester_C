@@ -19,7 +19,7 @@ void add_sort_method(char[], double (*)());
 
 double (*sorting_testers[MAX_ALGORITHM_COUNT])();   // Create array of test methods for each algorithm
 double algorithm_times[MAX_ALGORITHM_COUNT] = {0};  // Initialize each measured time to zero
-char csv_column_str[] = "Array Length";             // The csv column string. Appended each time an algorithm is added
+char csv_column_str[1024] = "Array Length";         // The csv column string. Appended each time an algorithm is added
 int algorithm_count = 0;                            // The number of algorithms to be tested. Incremented each time an algorithm is added
 
 int main() {
@@ -27,13 +27,13 @@ int main() {
 
     // START - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
-    int num_trials = 10;            // The number of trials per array length
+    int num_trials = 50;            // The number of trials per array length
 
-    int initial_length   = 1000;         // The initial (smallest) array size to be tested
+    int initial_length   = 2000;         // The initial (smallest) array size to be tested
     int max_length       = 10000;    // The maximum array size to be tested
     int length_increment = 50;         // After the trial sessions are complete, increment the next array size by this value
 
-    int min_number = 0, max_number = 500000;   // The minimum and maximum values in the arrays
+    int min_number = 0, max_number = 5000;   // The minimum and maximum values in the arrays
 
     // Add new test method for each sorting algorithm
     add_sort_method("Merge Sort", test_mergesort);
@@ -75,6 +75,7 @@ int main() {
         free(arr);
         free(copy_arr);
     }
+
     return 0;
 }
 
