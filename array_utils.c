@@ -11,6 +11,7 @@ void clone_array(const int *arr, int *clone_arr, int n) {
     }
 }
 
+// min is inclusive, max is exclusive
 int generate_random_number(int min, int max) {
     // https://forums.codeguru.com/showthread.php?534679-Generating-big-random-numbers-in-C
     return ((((rand() & 0xff)<<8 | (rand() & 0xff))<<8 | (rand() & 0xff))<<7 | (rand() & 127)) % (max + 1 - min) + min;
@@ -35,7 +36,7 @@ void shuffle(int *arr, int n) {
     int random_index;
     int temp;
     for(int i = n - 1; i > 0; --i) {
-        random_index = generate_random_number(0, i + 1);
+        random_index = generate_random_number(0, i);
         temp = arr[random_index];
         arr[random_index] = arr[i];
         arr[i] = temp;

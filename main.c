@@ -17,7 +17,8 @@ double test_radix_sort(int *, int *, int);
 double test_qr_sort(int *, int *, int);
 void add_sort_method(char[], double (*)());
 
-double (*sorting_testers[MAX_ALGORITHM_COUNT])();   // Create array of test methods for each algorithm
+
+double (*sorting_testers[MAX_ALGORITHM_COUNT])(int *, int *, int);   // Create array of test methods for each algorithm
 double algorithm_times[MAX_ALGORITHM_COUNT] = {0};  // Initialize each measured time to zero
 char csv_column_str[1024] = "Array Length";         // The csv column string. Appended each time an algorithm is added
 int algorithm_count = 0;                            // The number of algorithms to be tested. Incremented each time an algorithm is added
@@ -79,7 +80,7 @@ int main() {
     return 0;
 }
 
-void add_sort_method(char algorithm_name[], double (*sort_method)()) {
+void add_sort_method(char algorithm_name[], double (*sort_method)(int*, int*, int)) {
     sprintf(csv_column_str, "%s, %s", csv_column_str, algorithm_name);
     sorting_testers[algorithm_count++] = sort_method;
 }
