@@ -15,7 +15,7 @@ double test_quicksort(int *, int *, int);
 double test_counting_sort(int *, int *, int);
 double test_radix_sort(int *, int *, int);
 double test_qr_sort(int *, int *, int);
-void add_sort_method(char[], double (*)());
+void add_sort_method(char[], double (*)(int*, int*, int));
 
 
 double (*sorting_testers[MAX_ALGORITHM_COUNT])(int *, int *, int);   // Create array of test methods for each algorithm
@@ -28,13 +28,13 @@ int main() {
 
     // START - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
-    int num_trials = 50;            // The number of trials per array length
+    int num_trials = 30;            // The number of trials per array length
 
-    int initial_length   = 2000;         // The initial (smallest) array size to be tested
-    int max_length       = 10000;    // The maximum array size to be tested
-    int length_increment = 50;         // After the trial sessions are complete, increment the next array size by this value
+    int initial_length   = 1000;         // The initial (smallest) array size to be tested
+    int max_length       = 1000000;    // The maximum array size to be tested
+    int length_increment = 1000;         // After the trial sessions are complete, increment the next array size by this value
 
-    int min_number = 0, max_number = 5000;   // The minimum and maximum values in the arrays
+    int min_number = 0, max_number = 5000000;   // The minimum and maximum values in the arrays
 
     // Add new test method for each sorting algorithm
     add_sort_method("Merge Sort", test_mergesort);
@@ -58,10 +58,9 @@ int main() {
         // Each algorithm sorts the same array sequence on each trial; after each trial, the array is shuffled
         for (i = 0; i < num_trials; ++i) {
             shuffle(arr, arr_length);   // Array is shuffled for each trial
-            for (j = 0; j < algorithm_count; ++j) {
-                // algorithm_times[j] represents the sum of the times it takes for sort_testers[j] to complete
+            for (j = 0; j < algorithm_count; ++j)
                 algorithm_times[j] += (*sorting_testers[j])(arr, copy_arr, arr_length);
-            }
+
         }
 
         // Print the average time for each algorithm trial
@@ -76,7 +75,6 @@ int main() {
         free(arr);
         free(copy_arr);
     }
-
     return 0;
 }
 
