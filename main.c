@@ -33,16 +33,16 @@ int main() {
 
     int num_trials = 1;            // The number of trials per array length
 
-    int initial_length   = 227000;         // The initial (smallest) array size to be tested
+    int initial_length   = 1000;         // The initial (smallest) array size to be tested
     int max_length       = 10000000;    // The maximum array size to be tested
     int length_increment = 1000;         // After the trial sessions are complete, increment the next array size by this value
 
-    int min_number = 0, max_number = 15000000;   // The minimum and maximum values in the arrays
+    int min_number = 0, max_number = 50000000;   // The minimum and maximum values in the arrays
 
     // Add new test method for each sorting algorithm
-    add_sort_method("Merge Sort", test_mergesort);
-    add_sort_method("Quicksort", test_quicksort);
-    add_sort_method("Counting Sort", test_counting_sort);
+    //add_sort_method("Merge Sort", test_mergesort);
+    //add_sort_method("Quicksort", test_quicksort);
+    //add_sort_method("Counting Sort", test_counting_sort);
     add_sort_method("Radix Sort", test_radix_sort);
     add_sort_method("QR Sort", test_qr_sort);
 
@@ -67,13 +67,8 @@ int main() {
         // Each algorithm sorts the same array sequence on each trial; after each trial, the array is shuffled
         for (i = 0; i < num_trials; ++i) {
             shuffle(arr, arr_length);   // Array is shuffled for each trial
-            for (j = 0; j < algorithm_count; ++j) {
+            for (j = 0; j < algorithm_count; ++j)
                 algorithm_times[j] += (*sorting_testers[j])(arr, copy_arr, arr_length);
-                if (!is_sorted(copy_arr, arr_length)) {
-                    printf("NOT SORTED");
-                    return 0;
-                }
-            }
         }
 
         // Print the average time for each algorithm trial
