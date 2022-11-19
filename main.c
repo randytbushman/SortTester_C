@@ -15,6 +15,9 @@ double test_quicksort(int *, int *, int);
 double test_counting_sort(int *, int *, int);
 double test_radix_sort(int *, int *, int);
 double test_qr_sort(int *, int *, int);
+//double test_qr_sort_min_value_zero(int *, int *, int);
+//double test_qr_sort_power_2(int *, int *, int);
+//double test_qr_sort_power_2_min_value_zero(int *, int *, int);
 void add_sort_method(char[], double (*)(int*, int*, int));
 
 
@@ -28,13 +31,13 @@ int main() {
 
     // START - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
-    int num_trials = 30;            // The number of trials per array length
+    int num_trials = 1;            // The number of trials per array length
 
-    int initial_length   = 1000;         // The initial (smallest) array size to be tested
-    int max_length       = 1000000;    // The maximum array size to be tested
+    int initial_length   = 227000;         // The initial (smallest) array size to be tested
+    int max_length       = 10000000;    // The maximum array size to be tested
     int length_increment = 1000;         // After the trial sessions are complete, increment the next array size by this value
 
-    int min_number = 0, max_number = 5000000;   // The minimum and maximum values in the arrays
+    int min_number = 0, max_number = 15000000;   // The minimum and maximum values in the arrays
 
     // Add new test method for each sorting algorithm
     add_sort_method("Merge Sort", test_mergesort);
@@ -42,6 +45,12 @@ int main() {
     add_sort_method("Counting Sort", test_counting_sort);
     add_sort_method("Radix Sort", test_radix_sort);
     add_sort_method("QR Sort", test_qr_sort);
+
+    // Go to test methods to specific power and divisor values
+    //add_sort_method("QR Sort Min Value Zero", test_qr_sort_min_value_zero);
+    //add_sort_method("QR Sort Power 2", test_qr_sort_power_2);
+    //add_sort_method("QR Sort Power 2 Min Value Zero", test_qr_sort_power_2_min_value_zero);
+
 
     // END - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
@@ -58,9 +67,13 @@ int main() {
         // Each algorithm sorts the same array sequence on each trial; after each trial, the array is shuffled
         for (i = 0; i < num_trials; ++i) {
             shuffle(arr, arr_length);   // Array is shuffled for each trial
-            for (j = 0; j < algorithm_count; ++j)
+            for (j = 0; j < algorithm_count; ++j) {
                 algorithm_times[j] += (*sorting_testers[j])(arr, copy_arr, arr_length);
-
+                if (!is_sorted(copy_arr, arr_length)) {
+                    printf("NOT SORTED");
+                    return 0;
+                }
+            }
         }
 
         // Print the average time for each algorithm trial
@@ -117,3 +130,25 @@ double test_qr_sort(int *arr, int *copy_arr, int arr_length) {
     qr_sort_divisor_n(copy_arr, arr_length);
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
+
+double test_qr_sort_min_value_zero(int *arr, int *copy_arr, int arr_length) {
+    clock_t begin = clock();
+    clone_array(arr, copy_arr, arr_length);
+    qr_sort_min_value_zero(copy_arr, arr_length, arr_length);  // Specify divisor here
+    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+}
+
+double test_qr_sort_power_2(int *arr, int *copy_arr, int arr_length) {
+    clock_t begin = clock();
+    clone_array(arr, copy_arr, arr_length);
+    qr_sort_power_2(copy_arr, arr_length, 2);       // Specify Power here
+    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+}
+
+double test_qr_sort_power_2_min_value_zero(int *arr, int *copy_arr, int arr_length) {
+    clock_t begin = clock();
+    clone_array(arr, copy_arr, arr_length);
+    qr_sort_power_2_min_value_zero(copy_arr, arr_length, 2);
+    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+}
+

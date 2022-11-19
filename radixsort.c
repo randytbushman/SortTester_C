@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "radixsort.h"
 //
 // Created by randy on 10/18/2022.
@@ -19,7 +20,7 @@ void radix_sort(int *arr, int n) {
     int *countingArr = calloc(n, sizeof(int));     // Array initializes to all zeros
 
     int isNextRadix = (maxValue > 0);
-    for (int exp = 1; isNextRadix;) {
+    for (unsigned int exp = 1; isNextRadix;) {
         for (i = 0; i < radix; ++i)
             countingArr[((arr[i] - minValue) / exp) % radix]++;
         for (i = 1; i < radix; ++i)

@@ -17,6 +17,14 @@ int generate_random_number(int min, int max) {
     return ((((rand() & 0xff)<<8 | (rand() & 0xff))<<8 | (rand() & 0xff))<<7 | (rand() & 127)) % (max + 1 - min) + min;
 }
 
+int is_sorted(const int arr[], int n) {
+    for (int i = 1; i < n; ++i)
+        if (arr[i-1] > arr[i])
+            return 0;
+
+    return 1;
+}
+
 void lin_space(int *arr, int n, int min, int max) {
     arr[0] = min;
     arr[n - 1] = max;
