@@ -15,19 +15,19 @@
 #define MAX_ALGORITHM_COUNT 24      // Increase value if more than 24 algorithms to test
 
 // Prototype helper functions
-double test_mergesort(int *, int *, int);
-double test_quicksort(int *, int *, int);
-double test_counting_sort(int *, int *, int);
-double test_radix_sort(int *, int *, int);
-double test_qr_sort(int *, int *, int);
-double test_qr_sort_min_value_zero(int *, int *, int);
-double test_qr_sort_power_2(int *, int *, int);
-double test_qr_sort_power_2_min_value_zero(int *, int *, int);
-void add_sort_method(char[], double (*)(int*, int*, int));
+double test_mergesort(int[], int[], int);
+double test_quicksort(int[], int[], int);
+double test_counting_sort(int[], int[], int);
+double test_radix_sort(int[], int[], int);
+double test_qr_sort(int[], int[], int);
+double test_qr_sort_min_value_zero(int[], int[], int);
+double test_qr_sort_power_2(int[], int[], int);
+double test_qr_sort_power_2_min_value_zero(int[], int[], int);
+void add_sort_method(char[], double (*)(int[], int[], int));
 
 
 // Create global variables accessible anywhere in main.c
-double (*sorting_testers[MAX_ALGORITHM_COUNT])(int *, int *, int);   // Create array of test methods for each algorithm
+double (*sorting_testers[MAX_ALGORITHM_COUNT])(int[], int[], int);   // Create array of test methods for each algorithm
 double algorithm_times[MAX_ALGORITHM_COUNT] = {0};  // Initialize each measured time to zero
 char csv_column_str[1024] = "Array Length";         // The csv column string. Appended each time an algorithm is added. Buffer overflows are not checked.
 int algorithm_count = 0;                            // The number of algorithms to be tested. Incremented each time an algorithm is added
@@ -90,7 +90,7 @@ int main() {
     return 0;
 }
 
-void add_sort_method(char algorithm_name[], double (*sort_method)(int*, int*, int)) {
+void add_sort_method(char algorithm_name[], double (*sort_method)(int[], int[], int)) {
     sprintf(csv_column_str, "%s, %s", csv_column_str, algorithm_name);
     sorting_testers[algorithm_count++] = sort_method;
 }
@@ -98,56 +98,56 @@ void add_sort_method(char algorithm_name[], double (*sort_method)(int*, int*, in
 
 // Boilerplate test functions. Each returns the amount of time in milliseconds taken to sort with the respective algorithm.
 
-double test_mergesort(int *arr, int *copy_arr, int arr_length) {
+double test_mergesort(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
     merge_sort(copy_arr, arr_length);
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
-double test_quicksort(int *arr, int *copy_arr, int arr_length) {
+double test_quicksort(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
     quicksort(copy_arr, arr_length);
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
-double test_counting_sort(int *arr, int *copy_arr, int arr_length) {
+double test_counting_sort(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
     counting_sort(copy_arr, arr_length);
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
-double test_radix_sort(int *arr, int *copy_arr, int arr_length) {
+double test_radix_sort(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
     radix_sort(copy_arr, arr_length);
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
-double test_qr_sort(int *arr, int *copy_arr, int arr_length) {
+double test_qr_sort(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
     qr_sort_divisor_n(copy_arr, arr_length);
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
-double test_qr_sort_min_value_zero(int *arr, int *copy_arr, int arr_length) {
+double test_qr_sort_min_value_zero(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
     qr_sort_min_value_zero(copy_arr, arr_length, 128);  // Specify divisor here
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
-double test_qr_sort_power_2(int *arr, int *copy_arr, int arr_length) {
+double test_qr_sort_power_2(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
     qr_sort_power_2(copy_arr, arr_length, 2 << 6);       // Specify Power here
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
-double test_qr_sort_power_2_min_value_zero(int *arr, int *copy_arr, int arr_length) {
+double test_qr_sort_power_2_min_value_zero(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
     qr_sort_power_2_min_value_zero(copy_arr, arr_length, 2 << 6);
