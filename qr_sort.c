@@ -60,8 +60,8 @@ void qr_sort(int *arr, int n, int divisor)
 void qr_sort_min_value_zero(int *arr, int n, int divisor)
 {
     int i;
-    // Find the minimum and maximum values
     int maxValue = arr[0];
+
     for(i = 1; i < n; ++i)
         if(arr[i] > maxValue)
             maxValue = arr[i];
@@ -78,7 +78,7 @@ void qr_sort_min_value_zero(int *arr, int n, int divisor)
         ++countingArr[arr[i] % divisor];
     for(i = 1; i < divisor; ++i)
         countingArr[i] += countingArr[i-1];
-    for(i = n - 1; i > -1; --i)
+    for(i = n-1; i > -1; --i)
         shadowArr[--countingArr[arr[i] % divisor]] = arr[i];
 
     if(maxQuotient > 1) {
@@ -88,16 +88,16 @@ void qr_sort_min_value_zero(int *arr, int n, int divisor)
 
         // Perform Counting Sort on quotient values
         for(i = 0; i < n; ++i)
-            ++countingArr[shadowArr[i]/ divisor];
-        for(i = 1; i < n; ++i)
+            ++countingArr[shadowArr[i] / divisor];
+        for(i = 1; i < k; ++i)
             countingArr[i] += countingArr[i-1];
         for(i = n - 1; i > -1; --i)
             arr[--countingArr[shadowArr[i] / divisor]] = shadowArr[i];
     }
-    else
-        for(i = 0; i < n; ++i)
+    else {
+        for (i = 0; i < n; ++i)
             arr[i] = shadowArr[i];
-
+    }
     free(shadowArr);
     free(countingArr);
 }
