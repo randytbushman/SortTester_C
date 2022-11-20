@@ -2,7 +2,7 @@
  * @author: Randolph Bushman
  * @date: 11/20/2022
  */
-#include "quicksort.h"
+#include "sort.h"
 
 
 void quicksort(int *arr, int n) {

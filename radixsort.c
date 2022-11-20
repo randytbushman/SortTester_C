@@ -3,7 +3,7 @@
  * @date: 11/20/2022
  */
 #include <stdlib.h>
-#include "radixsort.h"
+#include "sort.h"
 
 
 void radix_sort(int *arr, int n) {

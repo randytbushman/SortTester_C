@@ -6,12 +6,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "array_utils.h"
-#include "countingsort.h"
-#include "mergesort.h"
-#include "qr_sort.h"
-#include "quicksort.h"
-#include "radixsort.h"
-
+#include "sort.h"
 #define MAX_ALGORITHM_COUNT 24      // Increase value if more than 24 algorithms to test
 
 // Prototype helper functions
@@ -51,7 +46,7 @@ int main() {
     //add_sort_method("Quicksort", test_quicksort);
     //add_sort_method("Counting Sort", test_counting_sort);
     //add_sort_method("Radix Sort", test_radix_sort);
-    add_sort_method("QR Sort", test_qr_sort);
+    //add_sort_method("QR Sort", test_qr_sort);
 
     // Go to test methods to specific power and divisor values
     add_sort_method("QR Sort Min Value Zero", test_qr_sort_min_value_zero);
@@ -143,14 +138,14 @@ double test_qr_sort_min_value_zero(int arr[], int copy_arr[], int arr_length) {
 double test_qr_sort_power_2(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_power_2(copy_arr, arr_length, 2 << 6);       // Specify Power here
+    qr_sort_power_2(copy_arr, arr_length, 7);       // Specify Power here
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
 double test_qr_sort_power_2_min_value_zero(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_power_2_min_value_zero(copy_arr, arr_length, 2 << 6);
+    qr_sort_power_2_min_value_zero(copy_arr, arr_length, 7);
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 

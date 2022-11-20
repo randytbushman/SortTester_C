@@ -1,6 +1,7 @@
-//
-// Created by randy on 11/7/2022.
-//
+/**
+ * @author: Randolph Bushman
+ * @date: 11/20/2022
+ */
 
 #ifndef SORT_TESTER_ARRAY_UTILS_H
 #define SORT_TESTER_ARRAY_UTILS_H

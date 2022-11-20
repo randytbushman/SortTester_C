@@ -2,7 +2,7 @@
  * @author: Randolph Bushman
  * @date: 11/20/2022
  */
-#include "mergesort.h"
+#include "sort.h"
 #include <stdlib.h>
 
 

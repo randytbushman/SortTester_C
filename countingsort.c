@@ -2,7 +2,7 @@
  * @author: Randolph Bushman
  * @date: 11/20/2022
  */
-#include "countingsort.h"
+#include "sort.h"
 #include <stdlib.h>
 
 /**
