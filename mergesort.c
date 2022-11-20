@@ -9,15 +9,14 @@
 /**
  * Performs recursive Merge Sort on the given array.
  * @param arr the array to be sorted
- * @param array_length the length of the array
+ * @param arr_length the length of the array
  */
-void merge_sort(int arr[], int array_length)
-{
-    int mid = array_length >> 1;
-    int *aux_array = malloc(array_length * sizeof (int));
+void merge_sort(int arr[], int arr_length) {
+    int mid = arr_length >> 1;
+    int *aux_array = malloc(arr_length * sizeof (int));
     merge_sort_recursive(arr, aux_array, 0, mid);
-    merge_sort_recursive(arr, aux_array, mid + 1, array_length - 1);
-    merge(arr, aux_array, 0, mid, array_length - 1);
+    merge_sort_recursive(arr, aux_array, mid + 1, arr_length - 1);
+    merge(arr, aux_array, 0, mid, arr_length - 1);
     free(aux_array);
 }
 
@@ -28,8 +27,7 @@ void merge_sort(int arr[], int array_length)
  * @param start_idx the start index where merge sort is performed on arr
  * @param end_idx the end index where Merge Sort is performed on arr
  */
-void merge_sort_recursive(int arr[], int aux_arr[], int start_idx, int end_idx)
-{
+void merge_sort_recursive(int arr[], int aux_arr[], int start_idx, int end_idx) {
     int mid = (start_idx + end_idx) >> 1;
     if(start_idx >= end_idx)
         return;
@@ -46,8 +44,7 @@ void merge_sort_recursive(int arr[], int aux_arr[], int start_idx, int end_idx)
  * @param mid_idx the index that represents the end of the first segment and the beginning of the second segment
  * @param end_idx the index that represents the end of the second index
  */
-void merge(int arr[], int aux_arr[], int start_idx, int mid_idx, int end_idx)
-{
+void merge(int arr[], int aux_arr[], int start_idx, int mid_idx, int end_idx) {
     int i = start_idx;
     int j = mid_idx + 1;
     int k = 0;

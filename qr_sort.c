@@ -128,7 +128,7 @@ void qr_sort_min_value_zero(int arr[], int arr_length, int divisor)
  * @param arr_length the length of the array
  * @param power we compute the divisor by raising 2 to this value
  */
-void qr_sort_power_2(int *arr, int arr_length, int power)
+void qr_sort_power_2(int arr[], int arr_length, int power)
 {
     int i;
     int divisor = 1 << power;
@@ -182,7 +182,7 @@ void qr_sort_power_2(int *arr, int arr_length, int power)
  * @param arr_length the length of the array
  * @param power we compute the divisor by raising 2 to this value
  */
-void qr_sort_power_2_min_value_zero(int *arr, int n, int power)
+void qr_sort_power_2_min_value_zero(int arr[], int n, int power)
 {
     int i;
     int divisor = 1 << power;

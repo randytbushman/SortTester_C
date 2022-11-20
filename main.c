@@ -18,7 +18,7 @@ double test_qr_sort(int[], int[], int);
 double test_qr_sort_min_value_zero(int[], int[], int);
 double test_qr_sort_power_2(int[], int[], int);
 double test_qr_sort_power_2_min_value_zero(int[], int[], int);
-void add_sort_method(char[], double (*)(int[], int[], int));
+void add_sort_method(char*, double (*)(int[], int[], int));
 
 
 // Create global variables accessible anywhere in main.c
@@ -85,9 +85,16 @@ int main() {
     return 0;
 }
 
-void add_sort_method(char algorithm_name[], double (*sort_method)(int[], int[], int)) {
+/**
+ * Adds a sorting algorithm and algorithm name to the tester.
+ * @param algorithm_name the algorithm name to be displayed in the output
+ * @param sort_function a pointer to the sorting algorithm test function where the first arguments represents the
+ * original array, the second represents an array to store and copy the contents of the original array, and the third
+ * represents the array length
+ */
+void add_sort_method(char *algorithm_name, double (*sort_function)(int[], int[], int)) {
     sprintf(csv_column_str, "%s, %s", csv_column_str, algorithm_name);
-    sorting_testers[algorithm_count++] = sort_method;
+    sorting_testers[algorithm_count++] = sort_function;
 }
 
 

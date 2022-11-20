@@ -9,13 +9,13 @@
 
 /**
  * Given a reference array (ref_arr) and an array to clone to (clone_to_arr), this function copies the values from
- * ref_arr into clone_to_arr => clone_to_arr[i] = ref_arr[i] for i=0 to array_length.
+ * ref_arr into clone_to_arr => clone_to_arr[i] = ref_arr[i] for i=0 to arr_length.
  * @param ref_arr the array that the clone_to_arr references
  * @param clone_to_arr the array to clone the reference values to
- * @param array_length the length of ref_arr; len(ref_arr) == len(clone_to_arr)
+ * @param arr_length the length of ref_arr; len(ref_arr) == len(clone_to_arr)
  */
-void clone_array(const int ref_arr[], int clone_to_arr[], int array_length) {
-    for(int i = 0; i < array_length; ++i)
+void clone_array(const int ref_arr[], int clone_to_arr[], int arr_length) {
+    for(int i = 0; i < arr_length; ++i)
         clone_to_arr[i] = ref_arr[i];
 }
 
@@ -35,11 +35,11 @@ int generate_random_number(int min, int max) {
 /**
  * Ensures that the given array is sorted in ascending order.
  * @param arr the array to be tested
- * @param array_length the length of the array
+ * @param arr_length the length of the array
  * @return 0 if the array is not sorted, and 1 if the array is sorted
  */
-int is_sorted_ascending(const int arr[], int array_length) {
-    for (int i = 1; i < array_length; ++i)
+int is_sorted_ascending(const int arr[], int arr_length) {
+    for (int i = 1; i < arr_length; ++i)
         if (arr[i-1] > arr[i])
             return 0;
     return 1;
@@ -48,15 +48,15 @@ int is_sorted_ascending(const int arr[], int array_length) {
 /**
  * Populates the given array with linearly spaced values in ascending order from the given minimum and maximum values.
  * @param arr the array to be populated
- * @param array_length the length of the array
+ * @param arr_length the length of the array
  * @param min the minimum array value; min < max
  * @param max the maximum array value; max > min
  */
-void lin_space(int arr[], int array_length, int min, int max) {
+void lin_space(int arr[], int arr_length, int min, int max) {
     arr[0] = min;
-    arr[array_length - 1] = max;
-    for(int i = 1; i < array_length - 1; ++i)
-        arr[i] = (int) (i * ((max - min) / (double) array_length)) + arr[0];
+    arr[arr_length - 1] = max;
+    for(int i = 1; i < arr_length - 1; ++i)
+        arr[i] = (int) (i * ((max - min) / (double) arr_length)) + arr[0];
 
 }
 
