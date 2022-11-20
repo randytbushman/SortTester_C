@@ -31,7 +31,7 @@ int main() {
 
     // START - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
-    int num_trials = 1;            // The number of trials per array length
+    int num_trials = 30;            // The number of trials per array length
 
     int initial_length   = 1000;         // The initial (smallest) array size to be tested
     int max_length       = 10000000;    // The maximum array size to be tested
