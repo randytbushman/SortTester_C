@@ -1,3 +1,7 @@
+/**
+ * @author: Randolph Bushman
+ * @date: 11/20/2022
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -8,8 +12,9 @@
 #include "quicksort.h"
 #include "radixsort.h"
 
-#define MAX_ALGORITHM_COUNT 24
+#define MAX_ALGORITHM_COUNT 24      // Increase value if more than 24 algorithms to test
 
+// Prototype helper functions
 double test_mergesort(int *, int *, int);
 double test_quicksort(int *, int *, int);
 double test_counting_sort(int *, int *, int);
@@ -21,10 +26,12 @@ double test_qr_sort_power_2_min_value_zero(int *, int *, int);
 void add_sort_method(char[], double (*)(int*, int*, int));
 
 
+// Create global variables accessible anywhere in main.c
 double (*sorting_testers[MAX_ALGORITHM_COUNT])(int *, int *, int);   // Create array of test methods for each algorithm
 double algorithm_times[MAX_ALGORITHM_COUNT] = {0};  // Initialize each measured time to zero
-char csv_column_str[1024] = "Array Length";         // The csv column string. Appended each time an algorithm is added
+char csv_column_str[1024] = "Array Length";         // The csv column string. Appended each time an algorithm is added. Buffer overflows are not checked.
 int algorithm_count = 0;                            // The number of algorithms to be tested. Incremented each time an algorithm is added
+
 
 int main() {
     srand(0);

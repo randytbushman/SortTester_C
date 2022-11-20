@@ -1,9 +1,11 @@
+/**
+ * @author: Randolph Bushman
+ * @date: 11/20/2022
+ */
 #include <stdlib.h>
-#include <stdio.h>
 #include "radixsort.h"
-//
-// Created by randy on 10/18/2022.
-//
+
+
 void radix_sort(int *arr, int n) {
     int i;
 

@@ -1,32 +1,38 @@
-//
-// Created by randy on 10/17/2022.
-//
+/**
+ * @author: Randolph Bushman
+ * @date: 11/20/2022
+ */
 #include "countingsort.h"
 #include <stdlib.h>
 
-void counting_sort(int *array, int n) {
+/**
+ * Performs ascending counting_sort on the array.
+ * @param arr the array to be sorted
+ * @param array_length the length of the array
+ */
+void counting_sort(int arr[], int array_length) {
     int i;
-    int minValue = array[0], maxValue = array[0];
+    int minValue = arr[0], maxValue = arr[0];
 
     // Locates minimum and maximum values
-    for(i = 1; i < n; ++i)
-        if(array[i] < minValue)
-            minValue = array[i];
-        else if(array[i] > maxValue)
-            maxValue = array[i];
+    for(i = 1; i < array_length; ++i)
+        if(arr[i] < minValue)
+            minValue = arr[i];
+        else if(arr[i] > maxValue)
+            maxValue = arr[i];
 
-    int k =  maxValue - minValue + 1;   // Length of the counting array
-    int *shadowArr = malloc(n * sizeof (int));
+    int k =  maxValue - minValue + 1;   // Length of the counting arr
+    int *shadowArr = malloc(array_length * sizeof (int));
     int *countingArr = calloc(k, sizeof(int));
 
-    for(i = 0; i < n; ++i)
-        ++countingArr[array[i] - minValue];
+    for(i = 0; i < array_length; ++i)
+        ++countingArr[arr[i] - minValue];
     for(i = 1; i < k; ++i)
         countingArr[i] += countingArr[i - 1];
-    for(i = n - 1; i > -1; --i)
-        shadowArr[--countingArr[array[i] - minValue]] = array[i];
-    for(i = 0; i < n; ++i)
-        array[i] = shadowArr[i];
+    for(i = array_length - 1; i > -1; --i)
+        shadowArr[--countingArr[arr[i] - minValue]] = arr[i];
+    for(i = 0; i < array_length; ++i)
+        arr[i] = shadowArr[i];
 
     free(shadowArr);
     free(countingArr);

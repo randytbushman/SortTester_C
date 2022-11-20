@@ -1,7 +1,7 @@
-//
-// Created by randy on 10/17/2022.
-//
-
+/**
+ * @author: Randolph Bushman
+ * @date: 11/20/2022
+ */
 #include "quicksort.h"
 
 

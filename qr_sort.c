@@ -1,7 +1,7 @@
-//
-// Created by randy on 10/18/2022.
-//
-
+/**
+ * @author: Randolph Bushman
+ * @date: 11/20/2022
+ */
 #include "qr_sort.h"
 #include <stdlib.h>
 
