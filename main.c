@@ -57,11 +57,9 @@ int main() {
     printf("%s\n", csv_column_str);     // Prints the column headers to std_output
 
     int i, j;
-    int *arr = NULL;        // The array of ints to be copied
-    int *copy_arr = NULL;   // This array references (copies) the int values in arr at each new trial
+    int *arr = malloc(max_length * sizeof (int));        // The array of ints to be copied
+    int *copy_arr = malloc(max_length * sizeof (int));   // This array references (copies) the int values in arr at each new trial
     for(int arr_length = initial_length; arr_length <= max_length; arr_length += length_increment) {
-        arr = malloc(arr_length * sizeof (int));
-        copy_arr = malloc(arr_length * sizeof (int));
         lin_space(arr, arr_length, min_number, max_number);     // Populate arr with linearly spaced values between min_number and max_number
 
         // Each algorithm sorts the same array sequence on each trial; after each trial, the array is shuffled
@@ -78,11 +76,10 @@ int main() {
             algorithm_times[i] = 0.0;   // Reset algorithm time after print
         }
         printf("\n");
-
-        // Memory is freed; size is increased and reallocated at next arr_length iteration
-        free(arr);
-        free(copy_arr);
     }
+
+    free(arr);
+    free(copy_arr);
     return 0;
 }
 
