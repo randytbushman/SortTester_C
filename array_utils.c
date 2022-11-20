@@ -1,53 +1,91 @@
-//
-// Created by randy on 11/7/2022.
-//
+/**
+ * @author: Randolph Bushman
+ * @date: 11/20/2022
+ */
 #include "array_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-void clone_array(const int *arr, int *clone_arr, int n) {
-    for(int i = 0; i < n; ++i) {
-        clone_arr[i] = arr[i];
-    }
+
+/**
+ * Given a reference array (ref_arr) and an array to clone to (clone_to_arr), this function copies the values from
+ * ref_arr into clone_to_arr => clone_to_arr[i] = ref_arr[i] for i=0 to array_length.
+ * @param ref_arr the array that the clone_to_arr references
+ * @param clone_to_arr the array to clone the reference values to
+ * @param array_length the length of ref_arr; len(ref_arr) == len(clone_to_arr)
+ */
+void clone_array(const int ref_arr[], int clone_to_arr[], int array_length) {
+    for(int i = 0; i < array_length; ++i)
+        clone_to_arr[i] = ref_arr[i];
 }
 
-// min is inclusive, max is exclusive
+/**
+ * Generates a random int between the specified min and max values.
+ * Reference: https://forums.codeguru.com/showthread.php?534679-Generating-big-random-numbers-in-C
+ * @param min the minimum inclusive value
+ * @param max the maximum exclusive value
+ * @return a random int between the specified min and max values
+ */
 int generate_random_number(int min, int max) {
-    // https://forums.codeguru.com/showthread.php?534679-Generating-big-random-numbers-in-C
+    // Random numbers in the stdlib.h library only generate values as large as 2^15. As a result, we bitwise OR and
+    // bitwise left shift 4 random numbers to generate a larger values.
     return ((((rand() & 0xff)<<8 | (rand() & 0xff))<<8 | (rand() & 0xff))<<7 | (rand() & 127)) % (max + 1 - min) + min;
 }
 
-int is_sorted(const int arr[], int n) {
-    for (int i = 1; i < n; ++i)
+/**
+ * Ensures that the given array is sorted in ascending order.
+ * @param arr the array to be tested
+ * @param array_length the length of the array
+ * @return 0 if the array is not sorted, and 1 if the array is sorted
+ */
+int is_sorted_ascending(const int arr[], int array_length) {
+    for (int i = 1; i < array_length; ++i)
         if (arr[i-1] > arr[i])
             return 0;
-
     return 1;
 }
 
-void lin_space(int *arr, int n, int min, int max) {
+/**
+ * Populates the given array with linearly spaced values in ascending order from the given minimum and maximum values.
+ * @param arr the array to be populated
+ * @param array_length the length of the array
+ * @param min the minimum array value; min < max
+ * @param max the maximum array value; max > min
+ */
+void lin_space(int arr[], int array_length, int min, int max) {
     arr[0] = min;
-    arr[n - 1] = max;
-    for(int i = 1; i < n - 1; ++i)
-        arr[i] = (int) (i * ((max - min) / (double) n)) + arr[0];
+    arr[array_length - 1] = max;
+    for(int i = 1; i < array_length - 1; ++i)
+        arr[i] = (int) (i * ((max - min) / (double) array_length)) + arr[0];
 
 }
 
-void print_int_array(int *arr, int n) {
+/**
+ * Given an int array and int array length, print a string representation of the array to the standard output.
+ * @param arr the array to be printed
+ * @param arr_length the length of the array
+ */
+void print_int_array(int arr[], int arr_length) {
     printf("[%d", arr[0]);
-    for (int i = 1; i < n; ++i)
+    for (int i = 1; i < arr_length; ++i)
         printf(", %d", arr[i]);
     printf("]\n");
 }
 
-void shuffle(int *arr, int n) {
+/**
+ * Given an int array and int array length, shuffle all the elements of the array with the Fisher-Yates algorithm which
+ * produces an unbiased permutation.
+ * @param arr the array to be shuffled
+ * @param arr_length the length of the array
+ */
+void shuffle(int arr[], int arr_length) {
     int random_index;
-    int temp;
-    for(int i = n - 1; i > 0; --i) {
+    int tmp;
+    for(int i = arr_length - 1; i > 0; --i) {
         random_index = generate_random_number(0, i);
-        temp = arr[random_index];
+        tmp = arr[random_index];
         arr[random_index] = arr[i];
-        arr[i] = temp;
+        arr[i] = tmp;
     }
 }
 

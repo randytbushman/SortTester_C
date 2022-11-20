@@ -88,6 +88,9 @@ void add_sort_method(char algorithm_name[], double (*sort_method)(int*, int*, in
     sorting_testers[algorithm_count++] = sort_method;
 }
 
+
+// Boilerplate test functions. Each returns the amount of time in milliseconds taken to sort with the respective algorithm.
+
 double test_mergesort(int *arr, int *copy_arr, int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
