@@ -15,6 +15,7 @@ double test_quicksort(int[], int[], int);
 double test_counting_sort(int[], int[], int);
 double test_radix_sort(int[], int[], int);
 double test_qr_sort(int[], int[], int);
+double test_qr_sort_d(int[], int[], int);
 double test_qr_sort_min_value_zero(int[], int[], int);
 double test_qr_sort_power_2(int[], int[], int);
 double test_qr_sort_power_2_min_value_zero(int[], int[], int);
@@ -49,6 +50,7 @@ int main() {
     //add_sort_method("QR Sort", test_qr_sort);
 
     // Go to test methods to specific power and divisor values
+    add_sort_method("QR Sort Set Divisor", test_qr_sort_d);
     add_sort_method("QR Sort Min Value Zero", test_qr_sort_min_value_zero);
     add_sort_method("QR Sort Power 2", test_qr_sort_power_2);
     add_sort_method("QR Sort Power 2 Min Value Zero", test_qr_sort_power_2_min_value_zero);
@@ -135,24 +137,31 @@ double test_qr_sort(int arr[], int copy_arr[], int arr_length) {
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
+double test_qr_sort_d(int arr[], int copy_arr[], int arr_length) {
+    clock_t begin = clock();
+    clone_array(arr, copy_arr, arr_length);
+    qr_sort(copy_arr, arr_length, 1 << 16);
+    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+}
+
 double test_qr_sort_min_value_zero(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_min_value_zero(copy_arr, arr_length, 128);  // Specify divisor here
+    qr_sort_min_value_zero(copy_arr, arr_length, 1 << 16);  // Specify divisor here
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
 double test_qr_sort_power_2(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_power_2(copy_arr, arr_length, 7);       // Specify Power here
+    qr_sort_power_2(copy_arr, arr_length, 16);       // Specify Power here
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
 double test_qr_sort_power_2_min_value_zero(int arr[], int copy_arr[], int arr_length) {
     clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_power_2_min_value_zero(copy_arr, arr_length, 7);
+    qr_sort_power_2_min_value_zero(copy_arr, arr_length, 16);
     return (double) (clock() - begin) / CLOCKS_PER_SEC;
 }
 
