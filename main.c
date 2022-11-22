@@ -58,6 +58,7 @@ int main() {
 
     // END - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
+    printf("sep=,");     // Prints the column headers to std_output
     printf("%s\n", csv_column_str);     // Prints the column headers to std_output
 
     int i, j;
