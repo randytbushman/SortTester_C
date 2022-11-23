@@ -36,29 +36,29 @@ int main() {
 
     int num_trials = 30;            // The number of trials per array length
 
-    int initial_length   = 1000;         // The initial (smallest) array size to be tested
-    int max_length       = 1000000;    // The maximum array size to be tested
-    int length_increment = 1000;         // After the trial sessions are complete, increment the next array size by this value
+    int initial_length   = 10;         // The initial (smallest) array size to be tested
+    int max_length       = 10000;    // The maximum array size to be tested
+    int length_increment = 10;         // After the trial sessions are complete, increment the next array size by this value
 
-    int min_number = 0, max_number = 1000000;   // The minimum and maximum values in the arrays
+    int min_number = 0, max_number = 100000000;   // The minimum and maximum values in the arrays
 
     // Add new test method for each sorting algorithm
     //add_sort_method("Merge Sort", test_mergesort);
     //add_sort_method("Quicksort", test_quicksort);
     //add_sort_method("Counting Sort", test_counting_sort);
-    //add_sort_method("Radix Sort", test_radix_sort);
-    //add_sort_method("QR Sort", test_qr_sort);
+    add_sort_method("Radix Sort", test_radix_sort);
+    add_sort_method("QR Sort", test_qr_sort);
 
     // Go to test methods to specific power and divisor values
-    add_sort_method("QR Sort Set Divisor", test_qr_sort_d);
-    add_sort_method("QR Sort Min Value Zero", test_qr_sort_min_value_zero);
-    add_sort_method("QR Sort Power 2", test_qr_sort_power_2);
-    add_sort_method("QR Sort Power 2 Min Value Zero", test_qr_sort_power_2_min_value_zero);
+    //add_sort_method("QR Sort Set Divisor", test_qr_sort_d);
+    //add_sort_method("QR Sort Min Value Zero", test_qr_sort_min_value_zero);
+    //add_sort_method("QR Sort Power 2", test_qr_sort_power_2);
+    //add_sort_method("QR Sort Power 2 Min Value Zero", test_qr_sort_power_2_min_value_zero);
 
 
     // END - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
-    printf("sep=,");     // Prints the column headers to std_output
+    printf("sep=,\n");     // Prints the column headers to std_output
     printf("%s\n", csv_column_str);     // Prints the column headers to std_output
 
     int i, j;
