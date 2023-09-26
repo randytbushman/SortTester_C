@@ -4,15 +4,20 @@
  */
 #include "sort.h"
 
+static unsigned long long int instruction_counter = 0; // # of comparisons + array accesses
+
+
 /**
  * Performs Quicksort on the given array.
  * @param arr the array to be sorted
  * @param arr_length the length of the array
  */
-void quicksort(int arr[], int arr_length) {
+unsigned long long int quicksort(int arr[], int arr_length) {
+    instruction_counter = 0;
     int p = partition(arr, 0, arr_length - 1);
     recursive_quicksort(arr, 0, p-1);
     recursive_quicksort(arr, p+1, arr_length - 1);
+    return instruction_counter;
 }
 
 /**
@@ -23,6 +28,7 @@ void quicksort(int arr[], int arr_length) {
  * @param end_idx the end index where Quicksort is performed on arr
  */
 void recursive_quicksort(int arr[], int start_idx, int end_idx) {
+    ++instruction_counter;
     if (end_idx - start_idx < 1)
         return;
     int p = partition(arr, start_idx, end_idx);
@@ -39,10 +45,15 @@ void recursive_quicksort(int arr[], int start_idx, int end_idx) {
  */
 int partition(int arr[], int start_idx, int end_idx) {
     int x = arr[end_idx];
+    ++instruction_counter;
     int i = start_idx - 1;
-    for (int j = start_idx; j < end_idx; ++j)
-        if(arr[j] < x)
+    for (int j = start_idx; j < end_idx; ++j) {
+        ++instruction_counter;
+        if (arr[j] < x) {
+            ++instruction_counter;
             swap(arr, ++i, j);
+        }
+    }
     swap(arr, i + 1, end_idx);
     return i + 1;
 }
@@ -57,4 +68,5 @@ void swap(int arr[], int i, int j) {
     int tmp = arr[i];
     arr[i] = arr[j];
     arr[j] = tmp;
+    instruction_counter += 4;
 }

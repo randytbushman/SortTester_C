@@ -5,19 +5,23 @@
 #include "sort.h"
 #include <stdlib.h>
 
+static unsigned long long int instruction_counter = 0; // # of comparisons + array accesses
+
 
 /**
  * Performs recursive Merge Sort on the given array.
  * @param arr the array to be sorted
  * @param arr_length the length of the array
  */
-void merge_sort(int arr[], int arr_length) {
+unsigned long long int merge_sort(int arr[], int arr_length) {
+    instruction_counter = 0;
     int mid = arr_length >> 1;
     int *aux_array = malloc(arr_length * sizeof (int));
     merge_sort_recursive(arr, aux_array, 0, mid);
     merge_sort_recursive(arr, aux_array, mid + 1, arr_length - 1);
     merge(arr, aux_array, 0, mid, arr_length - 1);
     free(aux_array);
+    return instruction_counter;
 }
 
 /**
@@ -29,6 +33,7 @@ void merge_sort(int arr[], int arr_length) {
  */
 void merge_sort_recursive(int arr[], int aux_arr[], int start_idx, int end_idx) {
     int mid = (start_idx + end_idx) >> 1;
+    ++instruction_counter;
     if(start_idx >= end_idx)
         return;
     merge_sort_recursive(arr, aux_arr, start_idx, mid);
@@ -50,19 +55,26 @@ void merge(int arr[], int aux_arr[], int start_idx, int mid_idx, int end_idx) {
     int k = 0;
 
     // Begin merge and store results in aux_arr
-    while(i <= mid_idx && j <= end_idx)
-        if(arr[i] < arr[j])
+    while((i <= mid_idx && ++instruction_counter) && j <= (end_idx && ++instruction_counter)) {
+        instruction_counter += 4;
+        if (arr[i] < arr[j])
             aux_arr[k++] = arr[i++];
         else
             aux_arr[k++] = arr[j++];
+    }
 
     // Fill remaining items from after merge into aux_arr
-    while(i <= mid_idx)
+    while(i <= mid_idx && ++instruction_counter) {
         aux_arr[k++] = arr[i++];
-    while(j <= end_idx)
+        instruction_counter += 2;
+    }
+    while(j <= end_idx && ++instruction_counter) {
         aux_arr[k++] = arr[j++];
-
+        instruction_counter += 2;
+    }
     // Fill arr with the values of aux_arr
-    for(int x = end_idx; x >= start_idx; --x)
+    for(int x = end_idx; x >= start_idx && ++instruction_counter; --x) {
         arr[x] = aux_arr[--k];
+        instruction_counter += 2;
+    }
 }

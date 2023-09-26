@@ -104,65 +104,46 @@ void add_sort_method(char *algorithm_name, double (*sort_function)(int[], int[],
 // Boilerplate test functions. Each returns the amount of time in milliseconds taken to sort with the respective algorithm.
 
 double test_mergesort(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    merge_sort(copy_arr, arr_length);
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) merge_sort(copy_arr, arr_length);
 }
 
 double test_quicksort(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    quicksort(copy_arr, arr_length);
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) quicksort(copy_arr, arr_length);
 }
 
 double test_counting_sort(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    counting_sort(copy_arr, arr_length);
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) counting_sort(copy_arr, arr_length);
 }
 
 double test_radix_sort(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    radix_sort(copy_arr, arr_length);
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) radix_sort(copy_arr, arr_length);
 }
 
 double test_qr_sort(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_divisor_n(copy_arr, arr_length);
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) qr_sort_divisor_n(copy_arr, arr_length);
 }
 
 double test_qr_sort_d(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort(copy_arr, arr_length, 1 << 16);
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) qr_sort(copy_arr, arr_length, 1 << 16);
 }
 
 double test_qr_sort_min_value_zero(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_min_value_zero(copy_arr, arr_length, 1 << 16);  // Specify divisor here
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) qr_sort_min_value_zero(copy_arr, arr_length, 1 << 16);
 }
 
 double test_qr_sort_power_2(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_power_2(copy_arr, arr_length, 16);       // Specify Power here
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) qr_sort_power_2(copy_arr, arr_length, 16);
 }
 
 double test_qr_sort_power_2_min_value_zero(int arr[], int copy_arr[], int arr_length) {
-    clock_t begin = clock();
     clone_array(arr, copy_arr, arr_length);
-    qr_sort_power_2_min_value_zero(copy_arr, arr_length, 16);
-    return (double) (clock() - begin) / CLOCKS_PER_SEC;
+    return (double) qr_sort_power_2_min_value_zero(copy_arr, arr_length, 16);
 }
-
