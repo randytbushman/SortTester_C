@@ -55,7 +55,7 @@ void merge(int arr[], int aux_arr[], int start_idx, int mid_idx, int end_idx) {
     int k = 0;
 
     // Begin merge and store results in aux_arr
-    while((i <= mid_idx && ++instruction_counter) && j <= (end_idx && ++instruction_counter)) {
+    while((++instruction_counter && i <= mid_idx) && j <= (++instruction_counter && end_idx)) {
         instruction_counter += 4;
         if (arr[i] < arr[j])
             aux_arr[k++] = arr[i++];
@@ -64,16 +64,16 @@ void merge(int arr[], int aux_arr[], int start_idx, int mid_idx, int end_idx) {
     }
 
     // Fill remaining items from after merge into aux_arr
-    while(i <= mid_idx && ++instruction_counter) {
+    while(++instruction_counter && i <= mid_idx) {
         aux_arr[k++] = arr[i++];
         instruction_counter += 2;
     }
-    while(j <= end_idx && ++instruction_counter) {
+    while(++instruction_counter && j <= end_idx) {
         aux_arr[k++] = arr[j++];
         instruction_counter += 2;
     }
     // Fill arr with the values of aux_arr
-    for(int x = end_idx; x >= start_idx && ++instruction_counter; --x) {
+    for(int x = end_idx; ++instruction_counter && x >= start_idx ; --x) {
         arr[x] = aux_arr[--k];
         instruction_counter += 2;
     }

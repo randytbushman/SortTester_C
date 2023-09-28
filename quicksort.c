@@ -28,8 +28,7 @@ unsigned long long int quicksort(int arr[], int arr_length) {
  * @param end_idx the end index where Quicksort is performed on arr
  */
 void recursive_quicksort(int arr[], int start_idx, int end_idx) {
-    ++instruction_counter;
-    if (end_idx - start_idx < 1)
+    if (++instruction_counter && end_idx - start_idx < 1)
         return;
     int p = partition(arr, start_idx, end_idx);
     recursive_quicksort(arr, start_idx, p - 1);
@@ -47,13 +46,10 @@ int partition(int arr[], int start_idx, int end_idx) {
     int x = arr[end_idx];
     ++instruction_counter;
     int i = start_idx - 1;
-    for (int j = start_idx; j < end_idx; ++j) {
-        ++instruction_counter;
-        if (arr[j] < x) {
-            ++instruction_counter;
+    for (int j = start_idx; ++instruction_counter && j < end_idx; ++j)
+        if ((instruction_counter += 2) && arr[j] < x)
             swap(arr, ++i, j);
-        }
-    }
+
     swap(arr, i + 1, end_idx);
     return i + 1;
 }
