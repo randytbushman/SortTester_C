@@ -34,18 +34,18 @@ int main() {
 
     // START - ARGUMENTS THAT USER-TESTER CAN CHANGE
 
-    int num_trials = 1;            // The number of trials per array length
+    int num_trials = 30;            // The number of trials per array length
 
-    int initial_length   = 100;         // The initial (smallest) array size to be tested
-    int length_increment = 100;         // After the trial sessions are complete, increment the next array size by this value
-    int max_length       = 1000000 + initial_length + 1;    // The maximum array size to be tested
+    int initial_length   = 10000;         // The initial (smallest) array size to be tested
+    int length_increment = 10000;         // After the trial sessions are complete, increment the next array size by this value
+    int max_length       = 1000000;    // The maximum array size to be tested
 
-    int min_number = 0, max_number = 50000000;   // The minimum and maximum values in the arrays
+    int min_number = 0, max_number = 5000000;   // The minimum and maximum values in the arrays
 
     // Add new test method for each sorting algorithm
-    // add_sort_method("Merge Sort", test_mergesort);
-    // add_sort_method("Quicksort", test_quicksort);
-    // add_sort_method("Counting Sort", test_counting_sort);
+    add_sort_method("Merge Sort", test_mergesort);
+    add_sort_method("Quicksort", test_quicksort);
+    add_sort_method("Counting Sort", test_counting_sort);
     add_sort_method("Radix Sort", test_radix_sort);
     add_sort_method("QR Sort", test_qr_sort);
 
