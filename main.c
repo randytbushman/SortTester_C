@@ -40,7 +40,7 @@ int main() {
     int length_increment = 10000;         // After the trial sessions are complete, increment the next array size by this value
     int max_length       = 1000000;    // The maximum array size to be tested
 
-    int min_number = 0, max_number = 5000000;   // The minimum and maximum values in the arrays
+    int min_number = 0, max_number = 500000;   // The minimum and maximum values in the arrays
 
     // Add new test method for each sorting algorithm
     add_sort_method("Merge Sort", test_mergesort);
@@ -50,10 +50,12 @@ int main() {
     add_sort_method("QR Sort", test_qr_sort);
 
     // Go to test methods to specific power and divisor values
-    //add_sort_method("QR Sort Set Divisor", test_qr_sort_d);
-    //add_sort_method("QR Sort Min Value Zero", test_qr_sort_min_value_zero);
-    //add_sort_method("QR Sort Power 2", test_qr_sort_power_2);
-    //add_sort_method("QR Sort Power 2 Min Value Zero", test_qr_sort_power_2_min_value_zero);
+    /*
+    add_sort_method("QR Sort Set Divisor", test_qr_sort_d);
+    add_sort_method("QR Sort Min Value Zero", test_qr_sort_min_value_zero);
+    add_sort_method("QR Sort Power 2", test_qr_sort_power_2);
+    add_sort_method("QR Sort Power 2 Min Value Zero", test_qr_sort_power_2_min_value_zero);
+     */
 
 
     // END - ARGUMENTS THAT USER-TESTER CAN CHANGE
@@ -120,11 +122,7 @@ double test_counting_sort(int arr[], int copy_arr[], int arr_length) {
 
 double test_radix_sort(int arr[], int copy_arr[], int arr_length) {
     clone_array(arr, copy_arr, arr_length);
-    double result = radix_sort(copy_arr, arr_length);
-    if (!is_sorted_ascending(copy_arr, arr_length)) {
-        printf("NOPE");
-    }
-    return result;
+    return radix_sort(copy_arr, arr_length);
 }
 
 double test_qr_sort(int arr[], int copy_arr[], int arr_length) {
