@@ -6,6 +6,7 @@
 
 int partition(int[], int, int, unsigned long long int*);
 void recursive_quicksort(int[], int, int, unsigned long long int*);
+void swap(int[], int, int, unsigned long long int*);
 
 /**
  * Performs Quicksort on the given array.
@@ -46,9 +47,9 @@ int partition(int arr[], int start_idx, int end_idx, unsigned long long int* ins
     int i = start_idx - 1;
     for (int j = start_idx; ++instruction_counter && j < end_idx; ++j)
         if ((instruction_counter += 2) && arr[j] < x)
-            swap(arr, ++i, j);
+            swap(arr, ++i, j, instruction_counter);
 
-    swap(arr, i + 1, end_idx);
+    swap(arr, i + 1, end_idx, instruction_counter);
     return i + 1;
 }
 
