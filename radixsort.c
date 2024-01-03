@@ -2,11 +2,9 @@
  * @author: Randolph Bushman
  * @date: 11/20/2022
  */
-#include <math.h>
-#include <stdio.h>
+#include "array_utils.h"
+#include "sort.h"
 #include <stdlib.h>
-
-static unsigned long long int instruction_counter = 0; // # of comparisons + array accesses
 
 
 /**
@@ -14,61 +12,75 @@ static unsigned long long int instruction_counter = 0; // # of comparisons + arr
  * @param arr the array to be sorted
  * @param arr_length the length of the array
  */
-unsigned long long int radix_sort(int arr[], int arr_length) {
-    int i;
-    int minValue = arr[0], maxValue = arr[0];
-    instruction_counter = 2;
+unsigned long long int radix_sort(int arr[], int arr_length, int radix, int min_value_zero, int use_bitwise) {
+    if (radix <= 0) // If radix is not a positive int, assign to arr_length
+        radix = arr_length;
 
-    for(i = 1; (++instruction_counter) && (i < arr_length); ++i) {
-        ++instruction_counter;
-        if ((instruction_counter += 2) && (arr[i] < minValue))
-            minValue = arr[i];
-        else if ((instruction_counter += 2) && (arr[i] > maxValue))
-            maxValue = arr[i];
+    unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
+
+    // Find min and max array values to get the max_quotient value
+    int min_value, max_value;
+    if (min_value_zero) {
+        min_value = 0;
+        find_max(arr, arr_length, &max_value, &instruction_counter);
+    }
+    else
+        find_min_max(arr, arr_length, &min_value, &max_value, &instruction_counter);
+    max_value -= min_value;
+
+    // Auxiliary array and keys
+    int* aux_arr = malloc(arr_length * sizeof(int));
+    int* temp_a = arr;
+    int* temp_b = aux_arr;
+    int* temp = NULL;
+
+    int* keys = malloc(arr_length * sizeof(int));
+    int* counting_arr = calloc(radix, sizeof(int));
+
+    // Compute the keys for the least significant digit
+    for (int i = 0; i < arr_length; ++i) {
+        if (use_bitwise) {
+            keys[i] = ((arr[i] - min_value) >> __builtin_ctz(use_bitwise)) % radix; // Bitwise shift
+        } else {
+            keys[i] = ((arr[i] - min_value)) % radix; // Standard division
+        }
     }
 
-    maxValue -= minValue;
-    int radix = arr_length;
-    int *shadowArr = malloc(arr_length * sizeof (int));
-    int *countingArr = calloc(arr_length, sizeof(int));     // Array initializes to all zeros
-    int num_iterations = 0;
+    unsigned long long int exp = 1;
+    int is_next_radix = max_value > 0;
+    while (is_next_radix) {
+        exp *= radix;
+        is_next_radix = (max_value / exp) > 0;
 
-    ++instruction_counter;
-    int isNextRadix = maxValue > 0;
-    for (unsigned long long int exp = 1; isNextRadix;) {
-        for (i = 0; (++instruction_counter) && (i < radix); ++i) {
-            countingArr[((arr[i] - minValue) / exp) % radix]++;
-            instruction_counter += 2;
-        }
+        // Check if there is another radix to iterate over after the current one
+        if (!is_next_radix) {
+            counting_key_sort(temp_a, temp_b, keys, counting_arr, arr_length, radix, arr == temp_a, &instruction_counter);
+        } else {
+            counting_key_sort(temp_a, temp_b, keys, counting_arr, arr_length, radix, 0, &instruction_counter);
 
-        for (i = 1; (++instruction_counter) && (i < radix); ++i) {
-            countingArr[i] += countingArr[i - 1];
-            instruction_counter += 2;
-
-        }
-
-        for (i = radix - 1; (++instruction_counter) && (i > -1); --i) {
-            shadowArr[--countingArr[((arr[i] - minValue) / exp) % radix]] = arr[i];
-            instruction_counter += 4;
-        }
-
-        for (i = 0; (++instruction_counter) && (i < radix); ++i) {
-            arr[i] = shadowArr[i];
-            instruction_counter += 2;
-        }
-
-        if ((++instruction_counter) && (maxValue / (exp *= radix) > 0)) {
-            for (i = 0; (++instruction_counter) && (i < arr_length); ++i) {
-                countingArr[i] = 0;
-                ++instruction_counter;
+            // Compute the keys for the next least significant digit
+            for (int i = 0; i < arr_length; ++i) {
+                if (use_bitwise) {
+                    keys[i] = ((temp_b[i] - min_value) >> __builtin_ctz(exp)) % radix; // Bitwise shift
+                } else {
+                    keys[i] = ((temp_b[i] - min_value) / exp) % radix; // Standard division
+                }
             }
+
+            // Reset Counting Array Values
+            for (int i = 0; i < radix; ++i)
+                counting_arr[i] = 0;
+
+            // Swap pointers to avoid extra copy from aux_arr to arr
+            temp = temp_a;
+            temp_a = temp_b;
+            temp_b = temp;
         }
-        else
-            isNextRadix = 0;
-        ++num_iterations;
     }
 
-    free(shadowArr);
-    free(countingArr);
+    // Free memory
+    free(aux_arr);
+    free(counting_arr);
+    free(keys);
     return instruction_counter;
 }

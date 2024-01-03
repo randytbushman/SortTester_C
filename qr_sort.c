@@ -1,13 +1,11 @@
 /**
  * @author: Randolph Bushman
- * @date: 11/20/2022
+ * @date: 1/2/2024
  */
 #include "sort.h"
+#include "array_utils.h"
 #include <stdlib.h>
 #include <math.h>
-
-static unsigned long long int instruction_counter = 0; // # of comparisons + array accesses
-
 
 unsigned int compute_srt_operations(unsigned int n, unsigned int m) {
     // Calculate maximum bit width of n and m using logarithms
@@ -19,338 +17,62 @@ unsigned int compute_srt_operations(unsigned int n, unsigned int m) {
     return OPERATIONS_PER_ITERATION * max_bit_width;
 }
 
+unsigned long long int qr_sort(int arr[], int arr_length, int divisor, int min_value_zero, int use_bitwise) {
+    if (divisor <= 0) // If divisor is not a positive int, assign to arr_length
+        divisor = arr_length;
 
-/**
- * Performs QR Sort on the given array with divisor arr_length.
- * @param arr the array to be sorted
- * @param arr_length the length of the array
- */
-unsigned long long int qr_sort_divisor_n(int arr[], int arr_length) {
-    qr_sort(arr, arr_length, arr_length);
+    // # Total number of comparisons + array accesses + divisor and modulo operations
+    unsigned long long int instruction_counter = 0;
+
+    // Find min and max array values to get the max_quotient value
+    int min_value, max_value;
+    if (min_value_zero) {
+        min_value = 0;
+        find_max(arr, arr_length, &max_value, &instruction_counter);
+    }
+    else
+        find_min_max(arr, arr_length, &min_value, &max_value, &instruction_counter);
+    int max_quotient = ((max_value - min_value) / divisor) + 1;
+
+    // Define auxiliary array and keys
+    int* aux_arr = malloc(arr_length * sizeof(int));
+    int* counting_arr = calloc(divisor > max_quotient ? divisor : max_quotient, sizeof(int));
+    int* keys = malloc(arr_length * sizeof(int));
+
+    // Compute remainder keys
+    for (int i = 0; i < arr_length; ++i)
+        if (use_bitwise)
+            keys[i] = arr[i] & (divisor - 1); // Bitwise AND for power of 2 divisor
+        else
+            keys[i] = arr[i] % divisor; // Standard modulo operation
+
+    // Perform Remainder Sort; Quotient Sort is not necessary if end-early condition is met
+    if (max_quotient == 1) {
+        counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 1, &instruction_counter);
+    }
+    else {
+        // Remainder Sort
+        counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 0, &instruction_counter);
+
+        // Reset counting array - can optimize.
+        for(int i = 0; i < divisor; ++i)
+            counting_arr[i] = 0;
+
+        // Compute quotient keys
+        for (int i = 0; i < arr_length; ++i) {
+            if (use_bitwise)
+                keys[i] = aux_arr[i] >> __builtin_ctz(divisor); // Bitwise shift for power of 2 divisor
+            else
+                keys[i] = aux_arr[i] / divisor; // Standard division
+        }
+
+        // Perform Quotient Sort
+        counting_key_sort(aux_arr, arr, keys, counting_arr, arr_length, max_quotient, 0, &instruction_counter);
+    }
+
+    // Free memory
+    free(aux_arr);
+    free(counting_arr);
+    free(keys);
     return instruction_counter;
-}
-
-/**
- * Performs QR Sort on the given array with the given divisor.
- * @param arr the array to be sorted
- * @param arr_length the length of the array
- * @param divisor the divisor used to determine remainder and quotient counting array sizes
- */
-unsigned long long int qr_sort(int arr[], int arr_length, int divisor)
-{
-    int i;
-    int minValue = arr[0], maxValue = arr[0];
-    instruction_counter = 2;
-
-    for(i = 1; ++instruction_counter && i < arr_length; ++i) {
-        ++instruction_counter;
-        if ((instruction_counter += 2) && arr[i] < minValue)
-            minValue = arr[i];
-        else if ((instruction_counter += 2) && arr[i] > maxValue)
-            maxValue = arr[i];
-    }
-
-    unsigned long long int div_counter = instruction_counter; // # of comparisons + array accesses
-    for (i = 0; i < arr_length; ++i) {
-        div_counter += compute_srt_operations(arr[i], divisor);
-    }
-
-    int maxQuotient = ((maxValue - minValue) / divisor) + 1;
-    int k = (divisor > maxQuotient) ? divisor : maxQuotient;
-    ++instruction_counter;
-
-    // Shadow array that is meant for temporary storage for all values
-    int *shadowArr = malloc(arr_length * sizeof (int));
-    int *countingArr = calloc(k, sizeof(int));
-
-    // Perform Counting Sort with remainder values
-    for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-        ++countingArr[(arr[i] - minValue) % divisor];
-        instruction_counter += 2;
-    }
-    for(i = 1; ++instruction_counter && i < divisor; ++i) {
-        countingArr[i] += countingArr[i - 1];
-        instruction_counter += 2;
-    }
-    for(i = arr_length - 1; ++instruction_counter && i > -1; --i) {
-        shadowArr[--countingArr[(arr[i] - minValue) % divisor]] = arr[i];
-        instruction_counter += 4;
-    }
-
-    if(++instruction_counter && maxQuotient > 1) {
-        // Reset the values to reuse counting array for sorting quotients
-        for(i = 0; ++instruction_counter && i < divisor; ++i) {
-            countingArr[i] = 0;
-            ++instruction_counter;
-        }
-
-        // Perform Counting Sort on quotient values
-        for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-            ++countingArr[(shadowArr[i] - minValue) / divisor];
-            instruction_counter += 2;
-        }
-
-        for(i = 1; ++instruction_counter && i < k; ++i) {
-            countingArr[i] += countingArr[i - 1];
-            instruction_counter += 2;
-        }
-        for(i = arr_length - 1; ++instruction_counter && i > -1; --i) {
-            arr[--countingArr[(shadowArr[i] - minValue) / divisor]] = shadowArr[i];
-            instruction_counter += 4;
-        }
-    }
-    else {
-        for (i = 0; ++instruction_counter && i < arr_length; ++i) {
-            arr[i] = shadowArr[i];
-            instruction_counter += 2;
-        }
-    }
-    free(shadowArr);
-    free(countingArr);
-
-    return div_counter;
-}
-
-/**
- * Performs QR Sort on the given array with the given divisor. This implementation assumes that the minimum value in the
- * array is zero.
- * @param arr the array to be sorted
- * @param arr_length the length of the array
- * @param divisor the divisor used to determine remainder and quotient counting array sizes
- */
-unsigned long long int qr_sort_min_value_zero(int arr[], int arr_length, int divisor)
-{
-    int i;
-    int maxValue = arr[0];
-    instruction_counter = 1;
-
-    for (i = 1; ++instruction_counter && i < arr_length; ++i)
-        if ((instruction_counter += 2) && arr[i] > maxValue) {
-            maxValue = arr[i];
-            ++instruction_counter;
-        }
-
-    unsigned long long int div_counter = instruction_counter; // # of comparisons + array accesses
-    for (i = 0; i < arr_length; ++i) {
-        div_counter += compute_srt_operations(arr[i], divisor);
-    }
-
-    int maxQuotient = (maxValue / divisor) + 1;
-    int k = (divisor > maxQuotient) ? divisor : maxQuotient;
-    ++instruction_counter;
-
-    // Shadow array that is meant for temporary storage for all values
-    int *shadowArr = malloc(arr_length * sizeof (int));
-    int *countingArr = calloc(k, sizeof(int));
-
-    // Perform Counting Sort with remainder values
-    for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-        ++countingArr[arr[i] % divisor];
-        instruction_counter += 2;
-    }
-    for(i = 1; ++instruction_counter && i < divisor; ++i) {
-        countingArr[i] += countingArr[i - 1];
-        instruction_counter += 2;
-    }
-    for(i = arr_length - 1; ++instruction_counter && i > -1; --i) {
-        shadowArr[--countingArr[arr[i] % divisor]] = arr[i];
-        instruction_counter += 4;
-    }
-
-    if(++instruction_counter && maxQuotient > 1) {
-        // Reset the values to reuse counting array for sorting quotients
-        for(i = 0; ++instruction_counter && i < divisor; ++i) {
-            countingArr[i] = 0;
-            ++instruction_counter;
-        }
-        // Perform Counting Sort on quotient values
-        for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-            ++countingArr[shadowArr[i] / divisor];
-            instruction_counter += 2;
-        }
-        for(i = 1; ++instruction_counter && i < k; ++i) {
-            countingArr[i] += countingArr[i - 1];
-            instruction_counter += 2;
-        }
-        for(i = arr_length - 1; ++instruction_counter && i > -1; --i) {
-            arr[--countingArr[shadowArr[i] / divisor]] = shadowArr[i];
-            instruction_counter += 4;
-        }
-    }
-    else {
-        for (i = 0; ++instruction_counter && i < arr_length; ++i) {
-            arr[i] = shadowArr[i];
-            instruction_counter += 2;
-        }
-    }
-    free(shadowArr);
-    free(countingArr);
-
-    return div_counter;
-}
-
-/**
- * Performs QR Sort on the given array. This implementation utilizes bitwise operations to compute the quotient and
- * remainder values.
- * @param arr the array to be sorted
- * @param arr_length the length of the array
- * @param power we compute the divisor by raising 2 to this value
- */
-unsigned long long int qr_sort_power_2(int arr[], int arr_length, int power)
-{
-    int i;
-    int divisor = 1 << power;
-    instruction_counter = 2;
-
-    // Find the minimum and maximum values
-    int minValue = arr[0], maxValue = arr[0];
-    for(i = 1; ++instruction_counter && i < arr_length; ++i) {
-        ++instruction_counter;
-        if ((instruction_counter += 2) && arr[i] < minValue)
-            minValue = arr[i];
-        else if ((instruction_counter += 2) && arr[i] > maxValue)
-            maxValue = arr[i];
-    }
-    unsigned long long int div_counter = instruction_counter; // # of comparisons + array accesses
-    for (i = 0; i < arr_length; ++i) {
-        div_counter += 4;
-    }
-
-    ++instruction_counter;
-    int maxQuotient = (maxValue >> power) + 1;
-    int k = (divisor > maxQuotient) ? divisor : maxQuotient;
-    int *shadowArr = malloc(arr_length * sizeof (int));
-    int *countingArr = calloc(k, sizeof(int));
-
-    // Perform Counting Sort with remainder values
-    for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-        ++countingArr[(arr[i] - minValue) & (divisor - 1)];
-        instruction_counter += 2;
-    }
-    for(i = 1; ++instruction_counter && i < divisor; ++i) {
-        countingArr[i] += countingArr[i - 1];
-        instruction_counter += 2;
-    }
-    for(i = arr_length - 1; ++instruction_counter && i > -1; --i) {
-        shadowArr[--countingArr[(arr[i] - minValue) & (divisor - 1)]] = arr[i];
-        instruction_counter += 4;
-    }
-
-    if(++instruction_counter && maxQuotient > 1) {
-        // Reset the values to reuse counting array for sorting quotients
-        for(i = 0; ++instruction_counter && i < divisor; ++i) {
-            countingArr[i] = 0;
-            ++instruction_counter;
-        }
-        // Perform Counting Sort on quotient values
-        for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-            ++countingArr[(shadowArr[i] - minValue) >> power];
-            instruction_counter += 2;
-        }
-        for(i = 1; ++instruction_counter && i < k; ++i) {
-            countingArr[i] += countingArr[i - 1];
-            instruction_counter += 2;
-        }
-        for(i = arr_length - 1; ++instruction_counter && i > -1; --i) {
-            arr[--countingArr[(shadowArr[i] - minValue) >> power]] = shadowArr[i];
-            instruction_counter += 4;
-        }
-    }
-    else
-        for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-            arr[i] = shadowArr[i];
-            instruction_counter += 2;
-        }
-
-    free(shadowArr);
-    free(countingArr);
-
-    return div_counter;
-
-    //return instruction_counter;
-}
-
-/**
- * Performs QR Sort on the given array. This implementation utilizes bitwise operations to compute the quotient and
- * remainder values and assumes that the minimum value in the array is zero.
- * @param arr the array to be sorted
- * @param arr_length the length of the array
- * @param power we compute the divisor by raising 2 to this value
- */
-unsigned long long int qr_sort_power_2_min_value_zero(int arr[], int arr_length, int power)
-{
-    int i;
-    int divisor = 1 << power;
-
-
-
-    // Find the minimum and maximum values
-    instruction_counter = 1;
-    int maxValue = arr[0];
-    for(i = 1; ++instruction_counter && i < arr_length; ++i)
-        if((instruction_counter += 2) && arr[i] > maxValue) {
-            ++instruction_counter;
-            maxValue = arr[i];
-        }
-
-    unsigned long long int div_counter = instruction_counter; // # of comparisons + array accesses
-
-
-    ++instruction_counter;
-    int maxQuotient = (maxValue >> power) + 1;
-    int k = (divisor > maxQuotient) ? divisor : maxQuotient;
-    int *shadowArr = malloc(arr_length * sizeof (int));
-    int *countingArr = calloc(k, sizeof(int));
-    div_counter++;
-
-    // Perform Counting Sort with remainder values
-    for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-        ++countingArr[arr[i] & (divisor - 1)];
-        instruction_counter += 2;
-    }
-    for(i = 1; ++instruction_counter && i < divisor; ++i) {
-        countingArr[i] += countingArr[i - 1];
-        instruction_counter += 2;
-    }
-    for(i = arr_length - 1; ++instruction_counter && i > -1; --i) {
-        shadowArr[--countingArr[arr[i] & (divisor - 1)]] = arr[i];
-        instruction_counter += 4;
-    }
-
-    if(++instruction_counter && maxQuotient > 1) {
-        // Reset the values to reuse counting array for sorting quotients
-        for(i = 0; ++instruction_counter && i < divisor; ++i) {
-            countingArr[i] = 0;
-            ++instruction_counter;
-        }
-        // Perform Counting Sort on quotient values
-        for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-            ++countingArr[shadowArr[i] >> power];
-            instruction_counter += 2;
-        }
-        for(i = 1; ++instruction_counter && i < k; ++i) {
-            countingArr[i] += countingArr[i - 1];
-            instruction_counter += 2;
-        }
-        for(i = arr_length - 1; ++instruction_counter && i > -1; --i) {
-            arr[--countingArr[shadowArr[i] >> power]] = shadowArr[i];
-            instruction_counter += 4;
-        }
-    }
-    else
-        for(i = 0; ++instruction_counter && i < arr_length; ++i) {
-            arr[i] = shadowArr[i];
-            instruction_counter += 2;
-        }
-
-    free(shadowArr);
-    free(countingArr);
-
-
-    for (i = 0; i < arr_length; ++i) {
-        div_counter += 4;
-    }
-
-    return div_counter;
-    //return instruction_counter;
 }

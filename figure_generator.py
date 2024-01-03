@@ -1,9 +1,9 @@
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import os
 import csv
-from cycler import cycler
+import os
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import numpy as np
 from matplotlib.ticker import ScalarFormatter
 
 
@@ -12,7 +12,7 @@ def setup_subplot(ax, x_exponential, y_exponential, x_lim=None, y_lim=None):
     ax.ticklabel_format(style='plain')
     x_label = f"($10^{x_exponential}$)" if x_exponential else ""
     ax.set_xlabel(f"Array Length {x_label}")
-    ax.set_ylabel(f"Computations ($10^{y_exponential}$)")
+    ax.set_ylabel(f"Computations (Log Scale)")  # ($10^{y_exponential}$)")
     if x_lim is not None:
         ax.set_xlim(x_lim)
     if y_lim is not None:
@@ -27,7 +27,8 @@ def generate_subplot_figure(ax, csv_file, x_exponential, y_exponential, x_lim, y
         colors = [f"C{i}" for i in range(len(headers))]
     x_arr = [v / (1 * 10 ** x_exponential) for v in x_arr]
     for i in range(1, len(headers)):
-        y_arr = [v / (1 * 10 ** y_exponential) for v in sort_col_list[i]]
+        # y_arr = [np.log(v / (1 * 10 ** y_exponential)) for v in sort_col_list[i]]
+        y_arr = [np.log(v) for v in sort_col_list[i]]
         ax.plot(x_arr, y_arr, label=headers[i], linestyle=linestyles[i-1], color=colors[i - 1])
     setup_subplot(ax, x_exponential, y_exponential, x_lim, y_lim)
 
@@ -70,12 +71,15 @@ def main() -> None:
     fig_7, ((ax6, ax7), (ax8, ax9)) = plt.subplots(2, 2, figsize=(14, 10))
 
     # You would call the appropriate figure generation function for each subplot
+    line_styles = ["-", "-", "-", "-", "-"]
+    generate_subplot_figure(ax1, "fig_5.csv", 3, 9, None, None, line_styles)
+    generate_subplot_figure(ax2, "fig_new.csv", 3, 9, None, None, line_styles)
+    generate_subplot_figure(ax3, "fig_6.csv", 3, 9, None, None, line_styles)
+    generate_subplot_figure(ax4, "fig_7.csv", 3, 9, None, None, line_styles)
+
     line_styles = ["-"] * 5
-    generate_subplot_figure(ax1, "fig_5.csv", 3, 9, (0, 1000), (0, 180), line_styles)
-    generate_subplot_figure(ax2, "fig_new.csv", 3, 9, (0, 1000), (0, 180), line_styles)
-    generate_subplot_figure(ax3, "fig_6.csv", 3, 9, (0, 1000), (0, 180), line_styles)
-    generate_subplot_figure(ax4, "fig_7.csv", 3, 9, (0, 1000), (0, 180), line_styles)
-    generate_subplot_figure(ax5, "fig_8.csv", 0, 9, (0, 1500), (-1, 20), line_styles[-2:], colors=["C3", "C4"])
+
+    generate_subplot_figure(ax5, "fig_8.csv", 0, 9, None, None, line_styles[-2:], colors=["C3", "C4"])
 
     line_styles = ["-"] * 5
     colors = ["C4"] + [f"C{i}" for i in range(4)]
@@ -85,10 +89,10 @@ def main() -> None:
     generate_bar_plot(ax8, "fig_9-10c.csv", colors)
     generate_bar_plot(ax9, "fig_9-10d.csv", colors)
     '''
-    generate_subplot_figure(ax6, "fig_9-10a.csv", 3, 9, (0, 1000), (0, 175), line_styles, colors)
-    generate_subplot_figure(ax7, "fig_9-10b.csv", 3, 9, (0, 1000), (0, 175), line_styles, colors)
-    generate_subplot_figure(ax8, "fig_9-10c.csv", 3, 9, (0, 1000), (0, 175), line_styles, colors)
-    generate_subplot_figure(ax9, "fig_9-10d.csv", 3, 9, (0, 1000), (0, 175), line_styles, colors)
+    generate_subplot_figure(ax6, "fig_9-10a.csv", 3, 9, None, None, line_styles, colors)
+    generate_subplot_figure(ax7, "fig_9-10b.csv", 3, 9, None, None, line_styles, colors)
+    generate_subplot_figure(ax8, "fig_9-10c.csv", 3, 9, None, None, line_styles, colors)
+    generate_subplot_figure(ax9, "fig_9-10d.csv", 3, 9, None, None, line_styles, colors)
 
     ax1.set_title("A")
     ax2.set_title("B")
@@ -121,9 +125,9 @@ def main() -> None:
     fig_7.tight_layout()
 
     # Save the entire figure
-    fig_5.savefig('figures_1_to_4.png', dpi=600)
-    fig_6.savefig('figures_8.png', dpi=600)
-    fig_7.savefig('figures_9-10.png', dpi=600)
+    fig_5.savefig('figures_1_to_4_log.png', dpi=600)
+    fig_6.savefig('figures_8_log.png', dpi=600)
+    fig_7.savefig('figures_9-10_log.png', dpi=600)
 
     # Show figures
     fig_5.show()

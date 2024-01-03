@@ -89,3 +89,34 @@ void shuffle(int arr[], int arr_length) {
     }
 }
 
+/**
+ * Given an array and pointers, find and store the minimum and maximum values and increment the instruction counter
+ * accordingly.
+ * @param arr
+ * @param arr_length
+ * @param min
+ * @param max
+ * @param instruction_counter
+ */
+void find_min_max(const int arr[], int arr_length, int *min, int *max, unsigned long long int *instruction_counter) {
+    int i;
+    *min = arr[0];
+    *max = *min;
+    for(i = 1; (i < arr_length); ++i) {
+        ++instruction_counter;
+        if (arr[i] < *min)
+            *min = arr[i];
+        else if (arr[i] > *max)
+            *max = arr[i];
+    }
+}
+
+void find_max(const int arr[], int arr_length, int *max, unsigned long long int *instruction_counter) {
+    int i;
+    *max = arr[0];
+    for(i = 1; (i < arr_length); ++i) {
+        ++instruction_counter;
+        if (arr[i] > *max)
+            *max = arr[i];
+    }
+}
