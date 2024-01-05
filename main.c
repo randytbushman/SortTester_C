@@ -1,7 +1,8 @@
 /**
  * @author: Randolph Bushman
- * @date: 11/20/2022
+ * @date: 01/04/2024
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "array_utils.h"
@@ -9,20 +10,13 @@
 #define MAX_ALGORITHM_COUNT 24      // Increase value if more than 24 algorithms to test
 
 typedef struct {
-    int radix;           // Used in Radix Sort and specifies the divisor to use. If the user does not provide a positive value, default to array length.
-    int divisor;         // Used in QR Sort and specifies the divisor to use. If the user does not provide a positive value, default to array length
-    int min_value_zero;  // Flag indicating if the minimum value in the array is zero, optimizing QR Sort.
-    int use_bitwise_ops; // Flag indicating if bitwise operations should be used, optimizing QR Sort.
+    int radix;  // Used in Radix Sort and specifies the divisor to use. If the user does not provide a positive value, default to array length.
+    int divisor;  // Used in QR Sort and specifies the divisor to use. If the user does not provide a positive value, default to array length
+    int min_value_zero;  // Flag indicating if the minimum value in the array is zero, optimizing Radix Sort and QR Sort.
+    int use_bitwise_ops;  // Flag indicating if bitwise operations should be used, optimizing Radix Sort and QR Sort.
 } SortArgs;
 
 typedef double (*SortFunc)(int copy_arr[], int arr_length, SortArgs args);
-
-// Prototype helper functions
-double test_mergesort(int[], int, SortArgs);
-double test_quicksort(int[], int, SortArgs);
-double test_counting_sort(int[], int, SortArgs);
-double test_radix_sort(int[], int, SortArgs);
-double test_qr_sort(int[], int, SortArgs);
 
 // Create global variables accessible anywhere in main.c
 SortFunc sorting_testers[MAX_ALGORITHM_COUNT];   // Create array of test methods for each algorithm
@@ -32,10 +26,64 @@ char csv_column_str[1024] = "Array Length";         // The csv column string. Ap
 int algorithm_count = 0;  // The number of algorithms to be tested. Incremented each time an algorithm is added
 
 /**
- * TODO - Add OOB checks
- * Adds a sorting algorithm and algorithm name to the tester.
- * @param name the name of the sorting algorithm
- * @param func the function to call on to execute the sorting algorithm
+ * A wrapper SortFunc for Merge Sort, returning the number of executed instructions.
+ * @param arr the array to sort.
+ * @param arr_length the length of the array to sort
+ * @param args boilerplate arguments not used by Merge Sort
+ * @return the number of instructions executed by Merge Sort
+ */
+double test_mergesort(int arr[], int arr_length, SortArgs args) {
+    return (double) merge_sort(arr, arr_length);
+}
+
+/**
+ * A wrapper SortFunc for Quicksort, returning the number of executed instructions.
+ * @param arr the array to sort.
+ * @param arr_length the length of the array to sort
+ * @param args boilerplate arguments not used by Quicksort
+ * @return the number of instructions executed by Quicksort
+ */
+double test_quicksort(int arr[], int arr_length, SortArgs args) {
+    return (double) quicksort(arr, arr_length);
+}
+
+/**
+ * A wrapper SortFunc for Counting Sort, returning the number of executed instructions.
+ * @param arr the array to sort.
+ * @param arr_length the length of the array to sort
+ * @param args arguments utilized by Counting Sort to optimize performance which include: min_value_zero
+ * @return the number of instructions executed by Counting Sort
+ */
+double test_counting_sort(int arr[], int arr_length, SortArgs args) {
+    return (double) counting_sort(arr, arr_length, args.min_value_zero);
+}
+
+/**
+ * A wrapper SortFunc for Radix Sort, returning the number of executed instructions.
+ * @param arr the array to sort.
+ * @param arr_length the length of the array to sort
+ * @param args arguments utilized by Radix Sort to optimize performance which include: radix, min_value_zero, and use_bitwise_ops
+ * @return the number of instructions executed by Radix Sort
+ */
+double test_radix_sort(int arr[], int arr_length, SortArgs args) {
+    return (double) radix_sort(arr, arr_length, args.radix, args.min_value_zero, args.use_bitwise_ops);
+}
+
+/**
+ * A wrapper SortFunc for QR Sort, returning the number of executed instructions.
+ * @param arr the array to sort
+ * @param arr_length the length of the array to sort
+ * @param args arguments utilized by QR Sort to optimize performance which include: divisor, min_value_zero, and use_bitwise_ops
+ * @return the number of instructions executed by QR Sort
+ */
+double test_qr_sort(int arr[], int arr_length, SortArgs args) {
+    return (double) qr_sort(arr, arr_length, args.divisor, args.min_value_zero, args.use_bitwise_ops);
+}
+
+/**
+ * Adds a sorting algorithm to be tested.
+ * @param name the string name of the sorting algorithm
+ * @param func the SortFunc (sorting algorithm function) to invoke the sorting algorithm
  * @param args the arguments that algorithm takes in
  */
 void add_sorting_method(const char* name, SortFunc func, SortArgs args) {
@@ -48,11 +96,12 @@ void add_sorting_method(const char* name, SortFunc func, SortArgs args) {
 int main() {
     srand(0);
 
-    int num_trials = 30;            // The number of trials per array length
-    int initial_length   = 1000;         // The initial (smallest) array size to be tested
-    int length_increment = 1000;         // After the trial sessions are complete, increment the next array size by this value
-    int max_length       = 10000;    // The maximum array size to be tested
-    int min_arr_value = 0, max_arr_value = 5009679;   // The minimum and maximum values in the arrays
+    // Trial parameters
+    int num_trials = 30;  // The number of trials per array length
+    int initial_length   = 1000;  // The initial (smallest) array size to be tested
+    int length_increment = 1000;  // After the trial sessions are complete, increment the next array size by this value
+    int max_length       = 10000;  // The maximum array size to be tested
+    int min_arr_value = 0, max_arr_value = 5009679;  // The minimum and maximum values in the arrays
 
     // Define arguments for each sorting algorithm
     SortArgs default_sort_args = {0};
@@ -73,7 +122,6 @@ int main() {
     add_sorting_method("Counting Sort", test_counting_sort, counting_sort_args);
     add_sorting_method("Radix Sort", test_radix_sort, radix_sort_args);
     add_sorting_method("QR Sort", test_qr_sort, qr_sort_args);
-
     /*
     add_sorting_method("QR Sort Set Divisor", test_qr_sort, qr_sort_set_divisor_args);
     add_sorting_method("QR Sort Min Value Zero", test_qr_sort, qr_sort_min_value_zero_args);
@@ -81,30 +129,30 @@ int main() {
     add_sorting_method("QR Sort Power 2 Min Value Zero", test_qr_sort, qr_sort_bitwise_min_value_zero_args);
     */
 
-    // END - ARGUMENTS THAT USER-TESTER CAN CHANGE
-    printf("sep=,\n");     // Prints the column headers to std_output
-    printf("%s\n", csv_column_str);     // Prints the column headers to std_output
+    // Print csv column headers
+    printf("sep=,\n");
+    printf("%s\n", csv_column_str);
 
-    int arr_length, i, j;
-    int *arr = malloc(max_length * sizeof (int));        // The array of ints to be copied
-    int *copy_arr = malloc(max_length * sizeof (int));   // This array references (copies) the int values in arr at each new trial
-    for(arr_length = initial_length; arr_length <= max_length; arr_length += length_increment) {
-        lin_space(arr, arr_length, min_arr_value, max_arr_value);     // Populate arr with linearly spaced values between min_arr_value and max_arr_value
+    // Run Sorting Evaluator
+    int *arr = malloc(max_length * sizeof (int));  // The int array to reference for sorting
+    int *copy_arr = malloc(max_length * sizeof (int));  // The int array that copies arr, then gets sorted
+    for(int arr_length = initial_length; arr_length <= max_length; arr_length += length_increment) {
+        lin_space(arr, arr_length, min_arr_value, max_arr_value);  // Populate arr with linearly spaced values between min_arr_value and max_arr_value
 
         // Each algorithm sorts the same array sequence on each trial; after each trial, the array is shuffled
-        for (i = 0; i < num_trials; ++i) {
-            shuffle(arr, arr_length);   // Array is shuffled for each trial
-            for (j = 0; j < algorithm_count; ++j) {
+        for (int i = 0; i < num_trials; ++i) {
+            shuffle(arr, arr_length);  // Array is shuffled for each trial
+            for (int j = 0; j < algorithm_count; ++j) {
                 clone_array(arr, copy_arr, arr_length);
                 algorithm_times[j] += (*sorting_testers[j])(copy_arr, arr_length, sorting_args[j]);
             }
         }
 
-        // Print the average time for each algorithm trial
+        // Print the average time for each algorithm trial in csv format
         printf("%d", arr_length);
-        for (i = 0; i < algorithm_count; ++i) {
+        for (int i = 0; i < algorithm_count; ++i) {
             printf(", %f", 1000 * algorithm_times[i] / num_trials);
-            algorithm_times[i] = 0.0;   // Reset algorithm time after print
+            algorithm_times[i] = 0.0;  // Reset algorithm time after print
         }
         printf("\n");
     }
@@ -112,31 +160,4 @@ int main() {
     free(arr);
     free(copy_arr);
     return 0;
-}
-
-/**
- * A wrapper SortFunc to allow
- * @param copy_arr
- * @param arr_length
- * @param args
- * @return
- */
-double test_mergesort(int copy_arr[], int arr_length, SortArgs args) {
-    return (double) merge_sort(copy_arr, arr_length);
-}
-
-double test_quicksort(int copy_arr[], int arr_length, SortArgs args) {
-    return (double) quicksort(copy_arr, arr_length);
-}
-
-double test_counting_sort(int copy_arr[], int arr_length, SortArgs args) {
-    return (double) counting_sort(copy_arr, arr_length, args.min_value_zero);
-}
-
-double test_radix_sort(int copy_arr[], int arr_length, SortArgs args) {
-    return (double) radix_sort(copy_arr, arr_length, args.radix, args.min_value_zero, args.use_bitwise_ops);
-}
-
-double test_qr_sort(int copy_arr[], int arr_length, SortArgs args) {
-    return (double) qr_sort(copy_arr, arr_length, args.divisor, args.min_value_zero, args.use_bitwise_ops);
 }
