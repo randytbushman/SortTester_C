@@ -18,27 +18,29 @@
  * @return
  */
 void counting_key_sort(int arr[], int aux_arr[], const int keys[], int counting_arr[], int arr_length, int counting_arr_length, int move_aux, unsigned long long int* instruction_counter) {
-    int i;
 
-    *instruction_counter += arr_length;
     // Count occurrences using keys
-    for (i = 0; i < arr_length; ++i) {
+    *instruction_counter += 3 * arr_length + 1;
+    for (int i = 0; i < arr_length; ++i) {
         counting_arr[keys[i]]++;
     }
 
     // Accumulate counts
-    for (i = 1; i < counting_arr_length; ++i) {
+    *instruction_counter += 3 * counting_arr_length;
+    for (int i = 1; i < counting_arr_length; ++i) {
         counting_arr[i] += counting_arr[i - 1];
     }
 
     // Rearrange elements
-    for (i = arr_length - 1; i >= 0; --i) {
+    *instruction_counter += 5 * arr_length + 1;
+    for (int i = arr_length - 1; i > -1; --i) {
         aux_arr[--counting_arr[keys[i]]] = arr[i];
     }
 
     // Copy back to original array
     if (move_aux) {
-        for (i = 0; i < arr_length; ++i) {
+        *instruction_counter += 3 * arr_length + 1;
+        for (int i = 0; i < arr_length; ++i) {
             arr[i] = aux_arr[i];
         }
     }
