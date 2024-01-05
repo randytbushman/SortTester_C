@@ -90,6 +90,19 @@ void shuffle(int arr[], int arr_length) {
 }
 
 /**
+ * Swaps the value at index i with the value at index j in the given array.
+ * @param arr the array where swapping takes place
+ * @param i the index of the first value to swap
+ * @param j the index of the second value to swap
+ */
+void swap(int arr[], int i, int j, unsigned long long int* instruction_counter) {
+    *instruction_counter += 4;
+    int tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
+/**
  * Given an array and pointers, find and store the minimum and maximum values and increment the instruction counter
  * accordingly.
  * @param arr
