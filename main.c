@@ -15,14 +15,14 @@ typedef struct {
     int use_bitwise_ops; // Flag indicating if bitwise operations should be used, optimizing QR Sort.
 } SortArgs;
 
-typedef double (*SortFunc)(int arr[], int copy_arr[], int arr_length, SortArgs args);
+typedef double (*SortFunc)(int copy_arr[], int arr_length, SortArgs args);
 
 // Prototype helper functions
-double test_mergesort(int[], int[], int, SortArgs);
-double test_quicksort(int[], int[], int, SortArgs);
-double test_counting_sort(int[], int[], int, SortArgs);
-double test_radix_sort(int[], int[], int, SortArgs);
-double test_qr_sort(int[], int[], int, SortArgs);
+double test_mergesort(int[], int, SortArgs);
+double test_quicksort(int[], int, SortArgs);
+double test_counting_sort(int[], int, SortArgs);
+double test_radix_sort(int[], int, SortArgs);
+double test_qr_sort(int[], int, SortArgs);
 
 // Create global variables accessible anywhere in main.c
 SortFunc sorting_testers[MAX_ALGORITHM_COUNT];   // Create array of test methods for each algorithm
@@ -49,16 +49,23 @@ int main() {
     srand(0);
 
     int num_trials = 30;            // The number of trials per array length
-    int initial_length   = 10;         // The initial (smallest) array size to be tested
-    int length_increment = 10;         // After the trial sessions are complete, increment the next array size by this value
-    int max_length       = 100000;    // The maximum array size to be tested
+    int initial_length   = 1000;         // The initial (smallest) array size to be tested
+    int length_increment = 1000;         // After the trial sessions are complete, increment the next array size by this value
+    int max_length       = 10000;    // The maximum array size to be tested
     int min_arr_value = 0, max_arr_value = 5009679;   // The minimum and maximum values in the arrays
 
     // Define arguments for each sorting algorithm
     SortArgs default_sort_args = {0};
     SortArgs counting_sort_args = {.min_value_zero = 0};
-    SortArgs radix_sort_args = {.radix = 16, .use_bitwise_ops = 1, .min_value_zero = 1};
-    SortArgs qr_sort_args = {.divisor = 16, .use_bitwise_ops = 1, .min_value_zero = 1};
+    SortArgs radix_sort_args = {.use_bitwise_ops = 0, .min_value_zero = 0, .radix = 0};
+    SortArgs qr_sort_args = {.use_bitwise_ops = 0, .min_value_zero = 0, .divisor = 0};
+
+    // QR Sort optimizations
+    int divisor = 16;
+    SortArgs qr_sort_set_divisor_args = {.divisor = divisor, .use_bitwise_ops = 1, .min_value_zero = 1};
+    SortArgs qr_sort_min_value_zero_args = {.divisor = divisor, .use_bitwise_ops = 1, .min_value_zero = 1};
+    SortArgs qr_sort_bitwise_args = {.divisor = divisor, .use_bitwise_ops = 1, .min_value_zero = 1};
+    SortArgs qr_sort_bitwise_min_value_zero_args = {.divisor = divisor, .use_bitwise_ops = 1, .min_value_zero = 1};
 
     // Add new test method for each sorting algorithm
     add_sorting_method("Merge Sort", test_mergesort, default_sort_args);
@@ -66,6 +73,13 @@ int main() {
     add_sorting_method("Counting Sort", test_counting_sort, counting_sort_args);
     add_sorting_method("Radix Sort", test_radix_sort, radix_sort_args);
     add_sorting_method("QR Sort", test_qr_sort, qr_sort_args);
+
+    /*
+    add_sorting_method("QR Sort Set Divisor", test_qr_sort, qr_sort_set_divisor_args);
+    add_sorting_method("QR Sort Min Value Zero", test_qr_sort, qr_sort_min_value_zero_args);
+    add_sorting_method("QR Sort Power 2", test_qr_sort, qr_sort_bitwise_args);
+    add_sorting_method("QR Sort Power 2 Min Value Zero", test_qr_sort, qr_sort_bitwise_min_value_zero_args);
+    */
 
     // END - ARGUMENTS THAT USER-TESTER CAN CHANGE
     printf("sep=,\n");     // Prints the column headers to std_output
@@ -81,9 +95,8 @@ int main() {
         for (i = 0; i < num_trials; ++i) {
             shuffle(arr, arr_length);   // Array is shuffled for each trial
             for (j = 0; j < algorithm_count; ++j) {
-                algorithm_times[j] += (*sorting_testers[j])(arr, copy_arr, arr_length, sorting_args[j]);
-                if (! is_sorted_ascending(copy_arr, arr_length))
-                    return -1;
+                clone_array(arr, copy_arr, arr_length);
+                algorithm_times[j] += (*sorting_testers[j])(copy_arr, arr_length, sorting_args[j]);
             }
         }
 
@@ -101,27 +114,29 @@ int main() {
     return 0;
 }
 
-double test_mergesort(int arr[], int copy_arr[], int arr_length, SortArgs args) {
-    clone_array(arr, copy_arr, arr_length);
+/**
+ * A wrapper SortFunc to allow
+ * @param copy_arr
+ * @param arr_length
+ * @param args
+ * @return
+ */
+double test_mergesort(int copy_arr[], int arr_length, SortArgs args) {
     return (double) merge_sort(copy_arr, arr_length);
 }
 
-double test_quicksort(int arr[], int copy_arr[], int arr_length, SortArgs args) {
-    clone_array(arr, copy_arr, arr_length);
+double test_quicksort(int copy_arr[], int arr_length, SortArgs args) {
     return (double) quicksort(copy_arr, arr_length);
 }
 
-double test_counting_sort(int arr[], int copy_arr[], int arr_length, SortArgs args) {
-    clone_array(arr, copy_arr, arr_length);
+double test_counting_sort(int copy_arr[], int arr_length, SortArgs args) {
     return (double) counting_sort(copy_arr, arr_length, args.min_value_zero);
 }
 
-double test_radix_sort(int arr[], int copy_arr[], int arr_length, SortArgs args) {
-    clone_array(arr, copy_arr, arr_length);
+double test_radix_sort(int copy_arr[], int arr_length, SortArgs args) {
     return (double) radix_sort(copy_arr, arr_length, args.radix, args.min_value_zero, args.use_bitwise_ops);
 }
 
-double test_qr_sort(int arr[], int copy_arr[], int arr_length, SortArgs args) {
-    clone_array(arr, copy_arr, arr_length);
+double test_qr_sort(int copy_arr[], int arr_length, SortArgs args) {
     return (double) qr_sort(copy_arr, arr_length, args.divisor, args.min_value_zero, args.use_bitwise_ops);
 }
