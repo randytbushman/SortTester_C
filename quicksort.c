@@ -3,8 +3,7 @@
  * @date: 01/04/2024
  */
 #include "sort.h"
-#include "array_utils.h"
-
+#include "sort_utils.h"
 
 /**
  * Partitions the element at end_idx in the given array.
@@ -46,7 +45,7 @@ void recursive_quicksort(int arr[], int start_idx, int end_idx, unsigned long lo
  * @param arr the array to be sorted
  * @param arr_length the length of the array
  */
-unsigned long long int quicksort(int arr[], int arr_length) {
+unsigned long long int quicksort(int arr[], int arr_length, SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
     recursive_quicksort(arr, 0, arr_length - 1, &instruction_counter);
     return instruction_counter;

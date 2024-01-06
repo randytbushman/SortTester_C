@@ -2,7 +2,7 @@
  * @author: Randolph Bushman
  * @date: 11/20/2022
  */
-#include "array_utils.h"
+#include "sort_utils.h"
 #include "sort.h"
 #include <stdlib.h>
 
@@ -12,15 +12,14 @@
  * @param arr the array to be sorted
  * @param arr_length the length of the array
  */
-unsigned long long int radix_sort(int arr[], int arr_length, int radix, int min_value_zero, int use_bitwise) {
-    if (radix <= 0) // If radix is not a positive int, assign to arr_length
-        radix = arr_length;
+unsigned long long int radix_sort(int arr[], int arr_length, SortArgs args) {
+    int radix = (args.radix > 0) ? args.radix : arr_length;
 
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
 
     // Find min and max array values to get the max_quotient value
     int min_value, max_value;
-    if (min_value_zero) {
+    if (args.min_value_zero) {
         min_value = 0;
         find_max(arr, arr_length, &max_value, &instruction_counter);
     }
@@ -38,10 +37,12 @@ unsigned long long int radix_sort(int arr[], int arr_length, int radix, int min_
     int* counting_arr = calloc(radix, sizeof(int));
 
     // Compute the keys for the least significant digit
-    for (int i = 0; i < arr_length; ++i) {
-        if (use_bitwise) {
-            keys[i] = ((arr[i] - min_value) >> __builtin_ctz(use_bitwise)) % radix; // Bitwise shift
-        } else {
+    if (args.use_bitwise_ops) {
+        for (int i = 0; i < arr_length; ++i) {
+            keys[i] = (arr[i] - min_value) & (radix - 1); // Bitwise shift
+        }
+    } else {
+        for (int i = 0; i < arr_length; ++i) {
             keys[i] = ((arr[i] - min_value)) % radix; // Standard division
         }
     }
@@ -59,10 +60,12 @@ unsigned long long int radix_sort(int arr[], int arr_length, int radix, int min_
             counting_key_sort(temp_a, temp_b, keys, counting_arr, arr_length, radix, 0, &instruction_counter);
 
             // Compute the keys for the next least significant digit
-            for (int i = 0; i < arr_length; ++i) {
-                if (use_bitwise) {
-                    keys[i] = ((temp_b[i] - min_value) >> __builtin_ctz(exp)) % radix; // Bitwise shift
-                } else {
+            if (args.use_bitwise_ops) {
+                for (int i = 0; i < arr_length; ++i) {
+                    keys[i] = ((temp_b[i] - min_value) >> __builtin_ctz(exp)) % radix;
+                }
+            } else {
+                for (int i = 0; i < arr_length; ++i) {
                     keys[i] = ((temp_b[i] - min_value) / exp) % radix; // Standard division
                 }
             }

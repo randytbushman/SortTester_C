@@ -3,7 +3,7 @@
  * @date: 1/2/2024
  */
 #include "sort.h"
-#include "array_utils.h"
+#include "sort_utils.h"
 #include <stdlib.h>
 #include <math.h>
 
@@ -17,16 +17,17 @@ unsigned int compute_srt_operations(unsigned int n, unsigned int m) {
     return OPERATIONS_PER_ITERATION * max_bit_width;
 }
 
-unsigned long long int qr_sort(int arr[], int arr_length, int divisor, int min_value_zero, int use_bitwise) {
-    if (divisor <= 0) // If divisor is not a positive int, assign to arr_length
-        divisor = arr_length;
+unsigned long long int qr_sort(int arr[], int arr_length, SortArgs args) {
+    if (args.divisor <= 0) // If divisor is not a positive int, assign to arr_length
+        args.divisor = arr_length;
+    int divisor = args.divisor;
 
     // # Total number of comparisons + array accesses + divisor and modulo operations
     unsigned long long int instruction_counter = 0;
 
     // Find min and max array values to get the max_quotient value
     int min_value, max_value;
-    if (min_value_zero) {
+    if (args.min_value_zero) {
         min_value = 0;
         find_max(arr, arr_length, &max_value, &instruction_counter);
     }
@@ -40,11 +41,16 @@ unsigned long long int qr_sort(int arr[], int arr_length, int divisor, int min_v
     int* keys = malloc(arr_length * sizeof(int));
 
     // Compute remainder keys
-    for (int i = 0; i < arr_length; ++i)
-        if (use_bitwise)
+    if (args.use_bitwise_ops) {
+        for (int i = 0; i < arr_length; ++i) {
             keys[i] = arr[i] & (divisor - 1); // Bitwise AND for power of 2 divisor
-        else
-            keys[i] = arr[i] % divisor; // Standard modulo operation
+        }
+    }
+    else {
+        for (int i = 0; i < arr_length; ++i) {
+            keys[i] = arr[i] % divisor;
+        }
+    }
 
     // Perform Remainder Sort; Quotient Sort is not necessary if end-early condition is met
     if (max_quotient == 1) {
@@ -59,11 +65,15 @@ unsigned long long int qr_sort(int arr[], int arr_length, int divisor, int min_v
             counting_arr[i] = 0;
 
         // Compute quotient keys
-        for (int i = 0; i < arr_length; ++i) {
-            if (use_bitwise)
+        if (args.use_bitwise_ops) {
+            for (int i = 0; i < arr_length; ++i) {
                 keys[i] = aux_arr[i] >> __builtin_ctz(divisor); // Bitwise shift for power of 2 divisor
-            else
+            }
+        }
+        else {
+            for (int i = 0; i < arr_length; ++i) {
                 keys[i] = aux_arr[i] / divisor; // Standard division
+            }
         }
 
         // Perform Quotient Sort

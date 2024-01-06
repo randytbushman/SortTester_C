@@ -2,10 +2,9 @@
  * @author: Randolph Bushman
  * @date: 11/20/2022
  */
-#include "array_utils.h"
+#include "sort_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
-
 
 /**
  * Given a reference array (ref_arr) and an array to clone to (clone_to_arr), this function copies the values from
@@ -124,6 +123,13 @@ void find_min_max(const int arr[], int arr_length, int *min, int *max, unsigned 
     }
 }
 
+/**
+ *
+ * @param arr
+ * @param arr_length
+ * @param max
+ * @param instruction_counter
+ */
 void find_max(const int arr[], int arr_length, int *max, unsigned long long int *instruction_counter) {
     int i;
     *max = arr[0];

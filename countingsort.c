@@ -2,7 +2,7 @@
  * @author: Randolph Bushman
  * @date: 11/20/2022
  */
-#include "array_utils.h"
+#include "sort_utils.h"
 #include "sort.h"
 #include <stdlib.h>
 
@@ -47,12 +47,12 @@ void counting_key_sort(int arr[], int aux_arr[], const int keys[], int counting_
 }
 
 
-unsigned long long int counting_sort(int arr[], int arr_length, int min_value_zero) {
+unsigned long long int counting_sort(int arr[], int arr_length, SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
 
     // Find minimum and maximum array values
     int min_value, max_value;
-    if (min_value_zero) {
+    if (args.min_value_zero) {
         min_value = 0;
         find_max(arr, arr_length, &max_value, &instruction_counter);
     }

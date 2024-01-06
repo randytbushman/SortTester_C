@@ -3,6 +3,7 @@
  * @date: 1/04/2024
  */
 #include "sort.h"
+#include "sort_utils.h"
 #include <stdlib.h>
 
 
@@ -14,7 +15,7 @@
  * @param mid_idx the index that represents the end of the first segment and the beginning of the second segment
  * @param end_idx the index that represents the end of the second index
  */
-void merge(int arr[], int aux_arr[], int start_idx, int mid_idx, int end_idx, unsigned long long int* instruction_counter) {
+void merge(int arr[], int aux_arr[], const int start_idx, const int mid_idx, const int end_idx, unsigned long long int* instruction_counter) {
     int i = start_idx, j = mid_idx + 1, k = start_idx;
 
     while ((++(*instruction_counter) && i <= mid_idx) && (++(*instruction_counter) && j <= end_idx)) {
@@ -25,20 +26,20 @@ void merge(int arr[], int aux_arr[], int start_idx, int mid_idx, int end_idx, un
             aux_arr[k++] = arr[j++];
     }
 
-    while (++(*instruction_counter) && i <= mid_idx) {
-        *instruction_counter += 2;
+    // Increment counters for the next 3 loops
+    *instruction_counter += ((mid_idx - i + 1) + (mid_idx - i) * 2);
+    *instruction_counter += ((end_idx - j + 1) + (end_idx - j) * 2);
+    *instruction_counter += ((end_idx - start_idx + 1) + (end_idx - start_idx) * 2);
+
+    while (i <= mid_idx)
         aux_arr[k++] = arr[i++];
-    }
 
-    while (++(*instruction_counter) && j <= end_idx) {
-        *instruction_counter += 2;
+    while (j <= end_idx)
         aux_arr[k++] = arr[j++];
-    }
 
-    for (int x = start_idx; ++(*instruction_counter) && x <= end_idx; x++) {
-        *instruction_counter += 2;
+    for (int x = start_idx; x <= end_idx; x++)
         arr[x] = aux_arr[x];
-    }
+
 }
 
 /**
@@ -62,7 +63,7 @@ void merge_sort_recursive(int arr[], int aux_arr[], int start_idx, int end_idx, 
  * @param arr the array to be sorted
  * @param arr_length the length of the array
  */
-unsigned long long int merge_sort(int arr[], int arr_length) {
+unsigned long long int merge_sort(int arr[], int arr_length, SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
     int *aux_array = malloc(arr_length * sizeof (int));
     merge_sort_recursive(arr, aux_array, 0, arr_length - 1, &instruction_counter);
