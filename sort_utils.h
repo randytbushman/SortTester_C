@@ -20,7 +20,7 @@ typedef struct {
     int radix;  // Used in Radix Sort and specifies the divisor to use. If the user does not provide a positive value, default to array length.
     int divisor;  // Used in QR Sort and specifies the divisor to use. If the user does not provide a positive value, default to array length
     int min_value_zero;  // Flag indicating if the minimum value in the array is zero, optimizing Radix Sort and QR Sort.
-    int use_bitwise_ops;  // Flag indicating if bitwise operations should be used, optimizing Radix Sort and QR Sort.
+    int bitwise_ops;  // Flag indicating if bitwise operations should be used, optimizing Radix Sort and QR Sort.
 } SortArgs;
 
 typedef unsigned long long int (*SortFunc)(int[], int, SortArgs);

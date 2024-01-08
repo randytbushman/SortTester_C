@@ -37,7 +37,7 @@ unsigned long long int radix_sort(int arr[], int arr_length, SortArgs args) {
     int* counting_arr = calloc(radix, sizeof(int));
 
     // Compute the keys for the least significant digit
-    if (args.use_bitwise_ops) {
+    if (args.bitwise_ops) {
         for (int i = 0; i < arr_length; ++i) {
             keys[i] = (arr[i] - min_value) & (radix - 1); // Bitwise shift
         }
@@ -60,7 +60,7 @@ unsigned long long int radix_sort(int arr[], int arr_length, SortArgs args) {
             counting_key_sort(temp_a, temp_b, keys, counting_arr, arr_length, radix, 0, &instruction_counter);
 
             // Compute the keys for the next least significant digit
-            if (args.use_bitwise_ops) {
+            if (args.bitwise_ops) {
                 for (int i = 0; i < arr_length; ++i) {
                     keys[i] = ((temp_b[i] - min_value) >> __builtin_ctz(exp)) % radix;
                 }

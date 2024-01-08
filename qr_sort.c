@@ -41,7 +41,7 @@ unsigned long long int qr_sort(int arr[], int arr_length, SortArgs args) {
     int* keys = malloc(arr_length * sizeof(int));
 
     // Compute remainder keys
-    if (args.use_bitwise_ops) {
+    if (args.bitwise_ops) {
         for (int i = 0; i < arr_length; ++i) {
             keys[i] = arr[i] & (divisor - 1); // Bitwise AND for power of 2 divisor
         }
@@ -65,7 +65,7 @@ unsigned long long int qr_sort(int arr[], int arr_length, SortArgs args) {
             counting_arr[i] = 0;
 
         // Compute quotient keys
-        if (args.use_bitwise_ops) {
+        if (args.bitwise_ops) {
             for (int i = 0; i < arr_length; ++i) {
                 keys[i] = aux_arr[i] >> __builtin_ctz(divisor); // Bitwise shift for power of 2 divisor
             }
