@@ -12,7 +12,7 @@
 // Create global variables accessible anywhere in main.c
 SortFunc sorting_algorithms[MAX_ALGORITHM_COUNT];   // Make array of test functions for each algorithm
 SortArgs sorting_args[MAX_ALGORITHM_COUNT];  // Make array of arguments to pass into each algorithm
-double algorithm_times[MAX_ALGORITHM_COUNT] = {0};  // Initialize each measured time to zero
+unsigned long long int algorithm_times[MAX_ALGORITHM_COUNT] = {0};  // Initialize each measured time to zero
 char csv_column_str[1024] = "Array Length";  // The csv column (header) string; appended each time an algorithm is added
 int algorithm_count = 0;  // The current number of algorithms to be tested; incremented each time an algorithm is added
 
@@ -32,7 +32,7 @@ int main() {
     srand(0);
 
     // Trial parameters
-    int num_trials = 1;  // The number of trials per array length
+    int num_trials = 10;  // The number of trials per array length
     int initial_length = 1000;  // The initial (smallest) array size to be tested
     int length_increment = 10000;  // After the trial sessions are complete, increment the next array size by this value
     int max_length = 1000000;  // The maximum array size to be tested
@@ -48,7 +48,7 @@ int main() {
     // QR Sort optimization algorithms
     int divisor = 16;  // Common divisor to test in QR Sort optimizations (ensure is power of 2)
     add_sorting_method("QR Sort Set Divisor", qr_sort, (SortArgs) {.divisor = divisor});
-    add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
+    //add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
     add_sorting_method("QR Sort Bitwise", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
     add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
 
@@ -78,8 +78,8 @@ int main() {
         // Print the average time for each algorithm trial in csv format
         printf("%d", arr_length);
         for (int i = 0; i < algorithm_count; ++i) {
-            printf(", %f", 1000 * algorithm_times[i] / num_trials);
-            algorithm_times[i] = 0.0;  // Reset algorithm time after print
+            printf(", %llu", 1000 * algorithm_times[i] / num_trials);
+            algorithm_times[i] = 0;  // Reset algorithm time after print
         }
         printf("\n");
     }
