@@ -17,8 +17,7 @@
  * @param move_aux
  * @return
  */
-void counting_key_sort(int arr[], int aux_arr[], const int keys[], int counting_arr[], int arr_length, int counting_arr_length, int move_aux, unsigned long long int* instruction_counter) {
-
+void counting_key_sort(int arr[], int aux_arr[], const int keys[], int counting_arr[], const int arr_length, const int counting_arr_length, const int move_aux, unsigned long long int* instruction_counter) {
     // Count occurrences using keys
     *instruction_counter += 3 * arr_length + 1;
     for (int i = 0; i < arr_length; ++i) {
@@ -46,7 +45,13 @@ void counting_key_sort(int arr[], int aux_arr[], const int keys[], int counting_
     }
 }
 
-
+/**
+ *
+ * @param arr
+ * @param arr_length
+ * @param args
+ * @return
+ */
 unsigned long long int counting_sort(int arr[], int arr_length, SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
 
@@ -66,9 +71,7 @@ unsigned long long int counting_sort(int arr[], int arr_length, SortArgs args) {
     // Call the modified counting_key_sort function
     counting_key_sort(arr, aux_arr, arr, counting_arr, arr_length, (max_value - min_value + 1), 1, &instruction_counter);
 
-    // Free the allocated memory
     free(aux_arr);
     free(counting_arr);
-
     return instruction_counter;
 }

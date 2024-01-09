@@ -33,10 +33,10 @@ int main() {
 
     // Trial parameters
     int num_trials = 1;  // The number of trials per array length
-    int initial_length = 10000;  // The initial (smallest) array size to be tested
+    int initial_length = 1000;  // The initial (smallest) array size to be tested
     int length_increment = 10000;  // After the trial sessions are complete, increment the next array size by this value
     int max_length = 1000000;  // The maximum array size to be tested
-    int min_arr_value = 0, max_arr_value = 5009679;  // The minimum and maximum values in the arrays
+    int min_arr_value = 0, max_arr_value = 51232;  // The minimum and maximum values in the arrays
 
     // Add new sorting algorithms
     add_sorting_method("Merge Sort", merge_sort, (SortArgs) {});
@@ -47,10 +47,10 @@ int main() {
 
     // QR Sort optimization algorithms
     int divisor = 16;  // Common divisor to test in QR Sort optimizations (ensure is power of 2)
-    add_sorting_method("QR Sort Set Divisor", qr_sort, (SortArgs) {.divisor = divisor});
-    add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
-    add_sorting_method("QR Sort Power 2", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
-    add_sorting_method("QR Sort Power 2 Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
+    //add_sorting_method("QR Sort Set Divisor", qr_sort, (SortArgs) {.divisor = divisor});
+    //add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
+    //add_sorting_method("QR Sort Bitwise", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
+    //add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
 
     // Print csv column headers
     printf("sep=,\n");
@@ -69,6 +69,9 @@ int main() {
             for (int j = 0; j < algorithm_count; ++j) {
                 clone_array(arr, copy_arr, arr_length);
                 algorithm_times[j] += (*sorting_algorithms[j])(copy_arr, arr_length, sorting_args[j]);
+                if (! is_sorted_ascending(copy_arr, arr_length)) {
+                    return -1;
+                }
             }
         }
 

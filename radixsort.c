@@ -6,14 +6,57 @@
 #include "sort.h"
 #include <stdlib.h>
 
+/**
+ *
+ * @param arr
+ * @param keys
+ * @param arr_length
+ * @param min_value
+ * @param exp
+ * @param args
+ * @param instruction_counter
+ */
+void compute_keys(int arr[], int keys[], int arr_length, int min_value, unsigned long long int exp, SortArgs args, unsigned long long int *instruction_counter) {
+    if (args.bitwise_ops) {
+        *instruction_counter += 5 * arr_length + 1;
+        if (args.min_value_zero) {
+            for (int i = 0; i < arr_length; ++i) {
+                keys[i] = (arr[i] >> __builtin_ctz(exp)) & (args.radix - 1);
+            }
+        } else {
+            for (int i = 0; i < arr_length; ++i) {
+                keys[i] = ((arr[i] - min_value) >> __builtin_ctz(exp)) & (args.radix - 1);
+            }
+        }
+    } else {
+        int val;
+        *instruction_counter += (3 * arr_length) + 1;
+        if (args.min_value_zero) {
+            for (int i = 0; i < arr_length; ++i) {
+                val = arr[i] / exp;
+                *instruction_counter += compute_srt_operations(arr[i], exp) + compute_srt_operations(val, args.radix);
+                keys[i] = val % args.radix;
+            }
+        } else {
+            for (int i = 0; i < arr_length; ++i) {
+                val = arr[i] / exp;
+                *instruction_counter += compute_srt_operations(arr[i], exp) + compute_srt_operations(val, args.radix);
+                keys[i] = ((arr[i] - min_value) / exp) % args.radix;
+            }
+        }
+
+    }
+}
 
 /**
  * Performs base-arr_length Radix Sort on the array where arr_length = len(arr).
  * @param arr the array to be sorted
  * @param arr_length the length of the array
+ * @param args
  */
 unsigned long long int radix_sort(int arr[], int arr_length, SortArgs args) {
     int radix = (args.radix > 0) ? args.radix : arr_length;
+    args.radix = radix;
 
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
 
@@ -36,20 +79,13 @@ unsigned long long int radix_sort(int arr[], int arr_length, SortArgs args) {
     int* keys = malloc(arr_length * sizeof(int));
     int* counting_arr = calloc(radix, sizeof(int));
 
-    // Compute the keys for the least significant digit
-    if (args.bitwise_ops) {
-        for (int i = 0; i < arr_length; ++i) {
-            keys[i] = (arr[i] - min_value) & (radix - 1); // Bitwise shift
-        }
-    } else {
-        for (int i = 0; i < arr_length; ++i) {
-            keys[i] = ((arr[i] - min_value)) % radix; // Standard division
-        }
-    }
-
     unsigned long long int exp = 1;
     int is_next_radix = max_value > 0;
     while (is_next_radix) {
+
+        // Compute the keys for the next least significant digit
+        compute_keys(temp_a, keys, arr_length, min_value, exp, args, &instruction_counter);
+
         exp *= radix;
         is_next_radix = (max_value / exp) > 0;
 
@@ -59,18 +95,8 @@ unsigned long long int radix_sort(int arr[], int arr_length, SortArgs args) {
         } else {
             counting_key_sort(temp_a, temp_b, keys, counting_arr, arr_length, radix, 0, &instruction_counter);
 
-            // Compute the keys for the next least significant digit
-            if (args.bitwise_ops) {
-                for (int i = 0; i < arr_length; ++i) {
-                    keys[i] = ((temp_b[i] - min_value) >> __builtin_ctz(exp)) % radix;
-                }
-            } else {
-                for (int i = 0; i < arr_length; ++i) {
-                    keys[i] = ((temp_b[i] - min_value) / exp) % radix; // Standard division
-                }
-            }
-
             // Reset Counting Array Values
+            instruction_counter += 2 * arr_length + 1;
             for (int i = 0; i < radix; ++i)
                 counting_arr[i] = 0;
 

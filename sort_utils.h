@@ -6,14 +6,15 @@
 #ifndef SORT_TESTER_SORT_UTILS_H
 #define SORT_TESTER_SORT_UTILS_H
 
+unsigned int compute_srt_operations(unsigned int, unsigned int);
 void clone_array(const int[], int[], int);
+void find_max(const int[], int, int*, unsigned long long int*);
+void find_min_max(const int[], int, int*, int*, unsigned long long int*);
 int generate_random_number(int, int);
 int is_sorted_ascending(const int[], int);
 void lin_space(int[], int, int, int);
 void print_int_array(int[], int);
 void shuffle(int[], int);
-void find_min_max(const int[], int, int*, int*, unsigned long long int*);
-void find_max(const int[], int, int*, unsigned long long int*);
 void swap(int[], int, int, unsigned long long int*);
 
 typedef struct {
@@ -23,6 +24,7 @@ typedef struct {
     int bitwise_ops;  // Flag indicating if bitwise operations should be used, optimizing Radix Sort and QR Sort.
 } SortArgs;
 
+// Define the arguments needed for sorting algorithms
 typedef unsigned long long int (*SortFunc)(int[], int, SortArgs);
 
 #endif //SORT_TESTER_SORT_UTILS_H

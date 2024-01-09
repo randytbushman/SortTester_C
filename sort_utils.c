@@ -1,8 +1,9 @@
 /**
  * @author: Randolph Bushman
- * @date: 11/20/2022
+ * @date: 1/8/2024
  */
 #include "sort_utils.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,15 +20,69 @@ void clone_array(const int ref_arr[], int clone_to_arr[], int arr_length) {
 }
 
 /**
+ *
+ * @param n
+ * @param m
+ * @return
+ */
+unsigned int compute_srt_operations(unsigned int n, unsigned int m) {
+    // Calculate maximum bit width of n and m using logarithms
+    unsigned int max_n_m = (n > m) ? n : m;
+    unsigned int max_bit_width = (max_n_m > 0) ? (int)floor(log2(max_n_m)) + 1 : 1;  // Ensure at least 1 iteration
+
+    // Maximum operations per iteration
+    const unsigned int OPERATIONS_PER_ITERATION = 6;
+    return OPERATIONS_PER_ITERATION * max_bit_width;
+}
+
+/**
+ *
+ * @param arr
+ * @param arr_length
+ * @param max
+ * @param instruction_counter
+ */
+void find_max(const int arr[], int arr_length, int *max, unsigned long long int *instruction_counter) {
+    int i;
+    *max = arr[0];
+    for(i = 1; (i < arr_length); ++i) {
+        ++instruction_counter;
+        if (arr[i] > *max)
+            *max = arr[i];
+    }
+}
+
+/**
+ *
+ * @param arr
+ * @param arr_length
+ * @param min
+ * @param max
+ * @param instruction_counter
+ */
+void find_min_max(const int arr[], int arr_length, int *min, int *max, unsigned long long int *instruction_counter) {
+    int i;
+    *min = arr[0];
+    *max = *min;
+    for(i = 1; (i < arr_length); ++i) {
+        ++instruction_counter;
+        if (arr[i] < *min)
+            *min = arr[i];
+        else if (arr[i] > *max)
+            *max = arr[i];
+    }
+}
+
+/**
  * Generates a random int between the specified min and max values.
+ * Random numbers in the stdlib.h library only generate values as large as 2^15. As a result, we bitwise OR and bitwise
+ * left shift 4 random numbers to generate a larger values.
  * Reference: https://forums.codeguru.com/showthread.php?534679-Generating-big-random-numbers-in-C
  * @param min the minimum inclusive value
  * @param max the maximum exclusive value
  * @return a random int between the specified min and max values
  */
 int generate_random_number(int min, int max) {
-    // Random numbers in the stdlib.h library only generate values as large as 2^15. As a result, we bitwise OR and
-    // bitwise left shift 4 random numbers to generate a larger values.
     return ((((rand() & 0xff)<<8 | (rand() & 0xff))<<8 | (rand() & 0xff))<<7 | (rand() & 127)) % (max + 1 - min) + min;
 }
 
@@ -99,43 +154,4 @@ void swap(int arr[], int i, int j, unsigned long long int* instruction_counter) 
     int tmp = arr[i];
     arr[i] = arr[j];
     arr[j] = tmp;
-}
-
-/**
- * Given an array and pointers, find and store the minimum and maximum values and increment the instruction counter
- * accordingly.
- * @param arr
- * @param arr_length
- * @param min
- * @param max
- * @param instruction_counter
- */
-void find_min_max(const int arr[], int arr_length, int *min, int *max, unsigned long long int *instruction_counter) {
-    int i;
-    *min = arr[0];
-    *max = *min;
-    for(i = 1; (i < arr_length); ++i) {
-        ++instruction_counter;
-        if (arr[i] < *min)
-            *min = arr[i];
-        else if (arr[i] > *max)
-            *max = arr[i];
-    }
-}
-
-/**
- *
- * @param arr
- * @param arr_length
- * @param max
- * @param instruction_counter
- */
-void find_max(const int arr[], int arr_length, int *max, unsigned long long int *instruction_counter) {
-    int i;
-    *max = arr[0];
-    for(i = 1; (i < arr_length); ++i) {
-        ++instruction_counter;
-        if (arr[i] > *max)
-            *max = arr[i];
-    }
 }

@@ -5,33 +5,103 @@
 #include "sort.h"
 #include "sort_utils.h"
 #include <stdlib.h>
-#include <math.h>
 
-unsigned int compute_srt_operations(unsigned int n, unsigned int m) {
-    // Calculate maximum bit width of n and m using logarithms
-    unsigned int max_n_m = (n > m) ? n : m;
-    unsigned int max_bit_width = (max_n_m > 0) ? (int)floor(log2(max_n_m)) + 1 : 1;  // Ensure at least 1 iteration
-
-    // Maximum operations per iteration
-    const unsigned int OPERATIONS_PER_ITERATION = 6;
-    return OPERATIONS_PER_ITERATION * max_bit_width;
+/**
+ *
+ * @param arr
+ * @param keys
+ * @param arr_length
+ * @param min_value
+ * @param args
+ * @param instruction_counter
+ */
+void compute_remainder_keys(const int arr[], int keys[], int arr_length, int min_value, SortArgs args, unsigned long long int *instruction_counter) {
+    if (args.bitwise_ops) {
+        *instruction_counter += (4 * arr_length) + 1;
+        if (args.min_value_zero) {
+            for (int i = 0; i < arr_length; ++i) {
+                keys[i] = arr[i] & (args.divisor - 1);
+            }
+        } else {
+            for (int i = 0; i < arr_length; ++i) {
+                keys[i] = (arr[i] - min_value) & (args.divisor - 1);
+            }
+        }
+    } else {
+        *instruction_counter += (3 * arr_length) + 1;
+        if (args.min_value_zero) {
+            for (int i = 0; i < arr_length; ++i) {
+                *instruction_counter += compute_srt_operations(arr[i], args.divisor);
+                keys[i] = arr[i] % args.divisor;
+            }
+        } else {
+            for (int i = 0; i < arr_length; ++i) {
+                *instruction_counter += compute_srt_operations(arr[i], args.divisor);
+                keys[i] = (arr[i] - min_value) % args.divisor;
+            }
+        }
+    }
 }
 
-unsigned long long int qr_sort(int arr[], int arr_length, SortArgs args) {
-    if (args.divisor <= 0) // If divisor is not a positive int, assign to arr_length
-        args.divisor = arr_length;
-    int divisor = args.divisor;
+/**
+ *
+ * @param arr
+ * @param keys
+ * @param arr_length
+ * @param min_value
+ * @param args
+ * @param instruction_counter
+ */
+void compute_quotient_keys(const int arr[], int keys[], int arr_length, int min_value, SortArgs args, unsigned long long int *instruction_counter) {
+    if (args.bitwise_ops) {
+        *instruction_counter += (4 * arr_length) + 1;
+        if (args.min_value_zero) {
+            for (int i = 0; i < arr_length; ++i) {
+                keys[i] = arr[i] >> __builtin_ctz(args.divisor); // Bitwise shift for power of 2 divisor
+            }
+        } else {
+            for (int i = 0; i < arr_length; ++i) {
+                keys[i] = (arr[i] - min_value) >> __builtin_ctz(args.divisor); // Bitwise shift for power of 2 divisor
+            }
+        }
+    } else {
+        *instruction_counter += (3 * arr_length) + 1;
+        if (args.min_value_zero) {
+            for (int i = 0; i < arr_length; ++i) {
+                *instruction_counter += compute_srt_operations(arr[i], args.divisor);
+                keys[i] = arr[i] / args.divisor;
+            }
+        } else {
+            for (int i = 0; i < arr_length; ++i) {
+                *instruction_counter += compute_srt_operations(arr[i], args.divisor);
+                keys[i] = (arr[i] - min_value) / args.divisor;
+            }
+        }
+    }
+}
 
+/**
+ *
+ * @param arr
+ * @param arr_length
+ * @param args
+ * @return
+ */
+unsigned long long int qr_sort(int arr[], int arr_length, SortArgs args) {
     // # Total number of comparisons + array accesses + divisor and modulo operations
     unsigned long long int instruction_counter = 0;
+
+    // If divisor is not a positive int, assign to arr_length
+    if (args.divisor <= 0)
+        args.divisor = arr_length;
+    int divisor = args.divisor;
 
     // Find min and max array values to get the max_quotient value
     int min_value, max_value;
     if (args.min_value_zero) {
         min_value = 0;
         find_max(arr, arr_length, &max_value, &instruction_counter);
-    }
-    else
+    } else
         find_min_max(arr, arr_length, &min_value, &max_value, &instruction_counter);
     int max_quotient = ((max_value - min_value) / divisor) + 1;
 
@@ -41,16 +111,7 @@ unsigned long long int qr_sort(int arr[], int arr_length, SortArgs args) {
     int* keys = malloc(arr_length * sizeof(int));
 
     // Compute remainder keys
-    if (args.bitwise_ops) {
-        for (int i = 0; i < arr_length; ++i) {
-            keys[i] = arr[i] & (divisor - 1); // Bitwise AND for power of 2 divisor
-        }
-    }
-    else {
-        for (int i = 0; i < arr_length; ++i) {
-            keys[i] = arr[i] % divisor;
-        }
-    }
+    compute_remainder_keys(arr, keys, arr_length, min_value, args, &instruction_counter);
 
     // Perform Remainder Sort; Quotient Sort is not necessary if end-early condition is met
     if (max_quotient == 1) {
@@ -60,27 +121,18 @@ unsigned long long int qr_sort(int arr[], int arr_length, SortArgs args) {
         // Remainder Sort
         counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 0, &instruction_counter);
 
-        // Reset counting array - can optimize.
-        for(int i = 0; i < divisor; ++i)
+        // Reset counting array
+        instruction_counter += 2 * (divisor > max_quotient ? max_quotient : divisor) + 1;
+        for(int i = 0; i < (divisor > max_quotient ? max_quotient : divisor); ++i)
             counting_arr[i] = 0;
 
         // Compute quotient keys
-        if (args.bitwise_ops) {
-            for (int i = 0; i < arr_length; ++i) {
-                keys[i] = aux_arr[i] >> __builtin_ctz(divisor); // Bitwise shift for power of 2 divisor
-            }
-        }
-        else {
-            for (int i = 0; i < arr_length; ++i) {
-                keys[i] = aux_arr[i] / divisor; // Standard division
-            }
-        }
+        compute_quotient_keys(aux_arr, keys, arr_length, min_value, args, &instruction_counter);
 
-        // Perform Quotient Sort
+        // Quotient Sort
         counting_key_sort(aux_arr, arr, keys, counting_arr, arr_length, max_quotient, 0, &instruction_counter);
     }
 
-    // Free memory
     free(aux_arr);
     free(counting_arr);
     free(keys);
