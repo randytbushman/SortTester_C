@@ -47,10 +47,10 @@ int main() {
 
     // QR Sort optimization algorithms
     int divisor = 16;  // Common divisor to test in QR Sort optimizations (ensure is power of 2)
-    //add_sorting_method("QR Sort Set Divisor", qr_sort, (SortArgs) {.divisor = divisor});
-    //add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
-    //add_sorting_method("QR Sort Bitwise", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
-    //add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
+    add_sorting_method("QR Sort Set Divisor", qr_sort, (SortArgs) {.divisor = divisor});
+    add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
+    add_sorting_method("QR Sort Bitwise", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
+    add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
 
     // Print csv column headers
     printf("sep=,\n");

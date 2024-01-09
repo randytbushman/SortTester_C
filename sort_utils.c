@@ -46,9 +46,11 @@ void find_max(const int arr[], int arr_length, int *max, unsigned long long int 
     int i;
     *max = arr[0];
     for(i = 1; (i < arr_length); ++i) {
-        ++instruction_counter;
-        if (arr[i] > *max)
+        *instruction_counter += 2;
+        if (arr[i] > *max) {
+            ++(*instruction_counter);
             *max = arr[i];
+        }
     }
 }
 
@@ -65,11 +67,13 @@ void find_min_max(const int arr[], int arr_length, int *min, int *max, unsigned 
     *min = arr[0];
     *max = *min;
     for(i = 1; (i < arr_length); ++i) {
-        ++instruction_counter;
+        *instruction_counter += 3;
         if (arr[i] < *min)
             *min = arr[i];
-        else if (arr[i] > *max)
+        else if (arr[i] > *max) {
+            *instruction_counter += 2;
             *max = arr[i];
+        }
     }
 }
 
