@@ -1,6 +1,6 @@
 /**
  * @author: Randolph Bushman
- * @date: 01/04/2024
+ * @date: 01/10/2024
  */
 
 #include <stdio.h>
@@ -22,7 +22,7 @@ int algorithm_count = 0;  // The current number of algorithms to be tested; incr
  * @param func the SortFunc (sorting algorithm function) to invoke the sorting algorithm
  * @param args the arguments that algorithm takes in
  */
-void add_sorting_method(const char* name, SortFunc func, SortArgs args) {
+void add_sorting_method(const char* name, const SortFunc func, const SortArgs args) {
     sprintf(csv_column_str, "%s, %s", csv_column_str, name);
     sorting_args[algorithm_count] = args;
     sorting_algorithms[algorithm_count++] = func;
@@ -36,7 +36,7 @@ int main() {
     int initial_length = 1000;  // The initial (smallest) array size to be tested
     int length_increment = 10000;  // After the trial sessions are complete, increment the next array size by this value
     int max_length = 1000000;  // The maximum array size to be tested
-    int min_arr_value = 0, max_arr_value = 51232;  // The minimum and maximum values in the arrays
+    int min_arr_value = 0, max_arr_value = 50000000;  // The minimum and maximum values in the arrays
 
     // Add new sorting algorithms
     add_sorting_method("Merge Sort", merge_sort, (SortArgs) {});
@@ -47,10 +47,10 @@ int main() {
 
     // QR Sort optimization algorithms
     int divisor = 16;  // Common divisor to test in QR Sort optimizations (ensure is power of 2)
-    add_sorting_method("QR Sort Set Divisor", qr_sort, (SortArgs) {.divisor = divisor});
+    //add_sorting_method("QR Sort Set Divisor", qr_sort, (SortArgs) {.divisor = divisor});
     //add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
-    add_sorting_method("QR Sort Bitwise", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
-    add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
+    //add_sorting_method("QR Sort Bitwise", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
+    //add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
 
     // Print csv column headers
     printf("sep=,\n");

@@ -1,6 +1,6 @@
 /**
  * @author: Randolph Bushman
- * @date: 1/2/2024
+ * @date: 1/10/2024
  */
 #include "sort.h"
 #include "sort_utils.h"
@@ -15,31 +15,24 @@
  * @param args
  * @param instruction_counter
  */
-void compute_remainder_keys(const int arr[], int keys[], int arr_length, int min_value, SortArgs args, unsigned long long int *instruction_counter) {
+void compute_remainder_keys(const int arr[], int keys[], const int arr_length, const int min_value, const SortArgs args, unsigned long long int *instruction_counter) {
     if (args.bitwise_ops) {
         *instruction_counter += (4 * arr_length) + 1;
-        if (args.min_value_zero) {
-            for (int i = 0; i < arr_length; ++i) {
+        if (args.min_value_zero)
+            for (int i = 0; i < arr_length; ++i)
                 keys[i] = arr[i] & (args.divisor - 1);
-            }
-        } else {
-            for (int i = 0; i < arr_length; ++i) {
+        else
+            for (int i = 0; i < arr_length; ++i)
                 keys[i] = (arr[i] - min_value) & (args.divisor - 1);
-            }
-        }
-    } else {
-        *instruction_counter += (3 * arr_length) + 1;
-        if (args.min_value_zero) {
-            for (int i = 0; i < arr_length; ++i) {
-                *instruction_counter += compute_srt_operations(arr[i], args.divisor);
+    }
+    else {
+        *instruction_counter += (3 * arr_length) + 1 + (20 * arr_length);  // Add weighted modulo operation count
+        if (args.min_value_zero)
+            for (int i = 0; i < arr_length; ++i)
                 keys[i] = arr[i] % args.divisor;
-            }
-        } else {
-            for (int i = 0; i < arr_length; ++i) {
-                *instruction_counter += compute_srt_operations(arr[i], args.divisor);
+        else
+            for (int i = 0; i < arr_length; ++i)
                 keys[i] = (arr[i] - min_value) % args.divisor;
-            }
-        }
     }
 }
 
@@ -52,7 +45,7 @@ void compute_remainder_keys(const int arr[], int keys[], int arr_length, int min
  * @param args
  * @param instruction_counter
  */
-void compute_quotient_keys(const int arr[], int keys[], int arr_length, int min_value, SortArgs args, unsigned long long int *instruction_counter) {
+void compute_quotient_keys(const int arr[], int keys[], const int arr_length, const int min_value, const SortArgs args, unsigned long long int *instruction_counter) {
     if (args.bitwise_ops) {
         *instruction_counter += (4 * arr_length) + 1;
         if (args.min_value_zero) {
@@ -65,18 +58,13 @@ void compute_quotient_keys(const int arr[], int keys[], int arr_length, int min_
             }
         }
     } else {
-        *instruction_counter += (3 * arr_length) + 1;
-        if (args.min_value_zero) {
-            for (int i = 0; i < arr_length; ++i) {
-                *instruction_counter += compute_srt_operations(arr[i], args.divisor);
+        *instruction_counter += (3 * arr_length) + 1 + (20 * arr_length); // Add weighted division operation count
+        if (args.min_value_zero)
+            for (int i = 0; i < arr_length; ++i)
                 keys[i] = arr[i] / args.divisor;
-            }
-        } else {
-            for (int i = 0; i < arr_length; ++i) {
-                *instruction_counter += compute_srt_operations(arr[i], args.divisor);
+        else
+            for (int i = 0; i < arr_length; ++i)
                 keys[i] = (arr[i] - min_value) / args.divisor;
-            }
-        }
     }
 }
 
@@ -87,7 +75,7 @@ void compute_quotient_keys(const int arr[], int keys[], int arr_length, int min_
  * @param args
  * @return
  */
-unsigned long long int qr_sort(int arr[], int arr_length, SortArgs args) {
+unsigned long long int qr_sort(int arr[], const int arr_length, SortArgs args) {
     // # Total number of comparisons + array accesses + divisor and modulo operations
     unsigned long long int instruction_counter = 0;
 

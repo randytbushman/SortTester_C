@@ -1,6 +1,6 @@
 /**
  * @author: Randolph Bushman
- * @date: 11/20/2022
+ * @date: 1/10/2024
  */
 #include "sort_utils.h"
 #include "sort.h"
@@ -18,30 +18,27 @@
  * @return
  */
 void counting_key_sort(int arr[], int aux_arr[], const int keys[], int counting_arr[], const int arr_length, const int counting_arr_length, const int move_aux, unsigned long long int* instruction_counter) {
-    // Count occurrences using keys
     *instruction_counter += 3 * arr_length + 1;
-    for (int i = 0; i < arr_length; ++i) {
+    *instruction_counter += 3 * counting_arr_length;
+    *instruction_counter += 5 * arr_length + 1;
+
+    // Count occurrences using keys
+    for (int i = 0; i < arr_length; ++i)
         counting_arr[keys[i]]++;
-    }
 
     // Accumulate counts
-    *instruction_counter += 3 * counting_arr_length;
-    for (int i = 1; i < counting_arr_length; ++i) {
+    for (int i = 1; i < counting_arr_length; ++i)
         counting_arr[i] += counting_arr[i - 1];
-    }
 
     // Rearrange elements
-    *instruction_counter += 5 * arr_length + 1;
-    for (int i = arr_length - 1; i > -1; --i) {
+    for (int i = arr_length - 1; i > -1; --i)
         aux_arr[--counting_arr[keys[i]]] = arr[i];
-    }
 
     // Copy back to original array
     if (move_aux) {
         *instruction_counter += 3 * arr_length + 1;
-        for (int i = 0; i < arr_length; ++i) {
+        for (int i = 0; i < arr_length; ++i)
             arr[i] = aux_arr[i];
-        }
     }
 }
 
@@ -52,7 +49,7 @@ void counting_key_sort(int arr[], int aux_arr[], const int keys[], int counting_
  * @param args
  * @return
  */
-unsigned long long int counting_sort(int arr[], int arr_length, SortArgs args) {
+unsigned long long int counting_sort(int arr[], const int arr_length, const SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
 
     // Find minimum and maximum array values

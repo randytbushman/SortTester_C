@@ -1,11 +1,10 @@
 /**
  * @author: Randolph Bushman
- * @date: 1/04/2024
+ * @date: 1/10/2024
  */
 #include "sort.h"
 #include "sort_utils.h"
 #include <stdlib.h>
-
 
 /**
  * Merges two sorted segments of arr from start_idx to mid_idx and mid_idx + 1 to end_idx.
@@ -39,7 +38,6 @@ void merge(int arr[], int aux_arr[], const int start_idx, const int mid_idx, con
 
     for (int x = start_idx; x <= end_idx; x++)
         arr[x] = aux_arr[x];
-
 }
 
 /**
@@ -49,7 +47,7 @@ void merge(int arr[], int aux_arr[], const int start_idx, const int mid_idx, con
  * @param start_idx the start index where merge sort is performed on arr
  * @param end_idx the end index where Merge Sort is performed on arr
  */
-void merge_sort_recursive(int arr[], int aux_arr[], int start_idx, int end_idx, unsigned long long int* instruction_counter) {
+void merge_sort_recursive(int arr[], int aux_arr[], const int start_idx, const int end_idx, unsigned long long int* instruction_counter) {
     if (++(*instruction_counter) && start_idx < end_idx) {
         int mid = (start_idx + end_idx) >> 1;
         merge_sort_recursive(arr, aux_arr, start_idx, mid, instruction_counter);
@@ -63,7 +61,7 @@ void merge_sort_recursive(int arr[], int aux_arr[], int start_idx, int end_idx, 
  * @param arr the array to be sorted
  * @param arr_length the length of the array
  */
-unsigned long long int merge_sort(int arr[], int arr_length, SortArgs args) {
+unsigned long long int merge_sort(int arr[], const int arr_length, const SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
     int *aux_array = malloc(arr_length * sizeof (int));
     merge_sort_recursive(arr, aux_array, 0, arr_length - 1, &instruction_counter);

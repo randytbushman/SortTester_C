@@ -1,6 +1,6 @@
 /**
  * @author: Randolph Bushman
- * @date: 01/04/2024
+ * @date: 01/10/2024
  */
 #include "sort.h"
 #include "sort_utils.h"
@@ -12,7 +12,7 @@
  * @param end_idx the end index where the partitioning is performed on arr
  * @return the new index of the partitioned array value
  */
-int partition(int arr[], int start_idx, int end_idx, unsigned long long int* instruction_counter) {
+int partition(int arr[], const int start_idx, const int end_idx, unsigned long long int* instruction_counter) {
     ++(*instruction_counter);
     int x = arr[end_idx];
     int i = start_idx - 1;
@@ -32,7 +32,7 @@ int partition(int arr[], int start_idx, int end_idx, unsigned long long int* ins
  * @param start_idx the start index where Quicksort is performed on arr
  * @param end_idx the end index where Quicksort is performed on arr
  */
-void recursive_quicksort(int arr[], int start_idx, int end_idx, unsigned long long int* instruction_counter) {
+void recursive_quicksort(int arr[], const int start_idx, const int end_idx, unsigned long long int* instruction_counter) {
     if (++(*instruction_counter) && end_idx - start_idx < 1)
         return;
     int p = partition(arr, start_idx, end_idx, instruction_counter);
@@ -45,7 +45,7 @@ void recursive_quicksort(int arr[], int start_idx, int end_idx, unsigned long lo
  * @param arr the array to be sorted
  * @param arr_length the length of the array
  */
-unsigned long long int quicksort(int arr[], int arr_length, SortArgs args) {
+unsigned long long int quicksort(int arr[], const int arr_length, const SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
     recursive_quicksort(arr, 0, arr_length - 1, &instruction_counter);
     return instruction_counter;
