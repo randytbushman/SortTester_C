@@ -6,6 +6,8 @@
 #ifndef SORT_TESTER_SORT_UTILS_H
 #define SORT_TESTER_SORT_UTILS_H
 
+#define DIVISION_INSTRUCTION_WEIGHT 15
+
 void clone_array(const int[], int[], int);
 void find_max(const int[], int, int*, unsigned long long int*);
 void find_min_max(const int[], int, int*, int*, unsigned long long int*);

@@ -25,9 +25,8 @@ void compute_keys(const int arr[], int keys[], const int arr_length, const int m
         else
             for (int i = 0; i < arr_length; ++i)
                 keys[i] = ((arr[i] - min_value) >> __builtin_ctz(exp)) & (args.radix - 1);
-    }
-    else {
-        *instruction_counter += (3 * arr_length) + 1 + (40 * arr_length);  // Add weighted division and modulo operation count
+    } else {
+        *instruction_counter += (3 * arr_length) + 1 + (2 * DIVISION_INSTRUCTION_WEIGHT * arr_length);  // Add weighted division and modulo operation count
         if (args.min_value_zero)
             for (int i = 0; i < arr_length; ++i)
                 keys[i] = (arr[i] / exp) % args.radix;
@@ -54,8 +53,7 @@ unsigned long long int radix_sort(int arr[], const int arr_length, SortArgs args
     if (args.min_value_zero) {
         min_value = 0;
         find_max(arr, arr_length, &max_value, &instruction_counter);
-    }
-    else
+    } else
         find_min_max(arr, arr_length, &min_value, &max_value, &instruction_counter);
     max_value -= min_value;
 

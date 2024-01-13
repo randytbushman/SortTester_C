@@ -26,7 +26,7 @@ void compute_remainder_keys(const int arr[], int keys[], const int arr_length, c
                 keys[i] = (arr[i] - min_value) & (args.divisor - 1);
     }
     else {
-        *instruction_counter += (3 * arr_length) + 1 + (20 * arr_length);  // Add weighted modulo operation count
+        *instruction_counter += (3 * arr_length) + 1 + (DIVISION_INSTRUCTION_WEIGHT * arr_length);  // Add weighted modulo operation count
         if (args.min_value_zero)
             for (int i = 0; i < arr_length; ++i)
                 keys[i] = arr[i] % args.divisor;
@@ -58,7 +58,7 @@ void compute_quotient_keys(const int arr[], int keys[], const int arr_length, co
             }
         }
     } else {
-        *instruction_counter += (3 * arr_length) + 1 + (20 * arr_length); // Add weighted division operation count
+        *instruction_counter += (3 * arr_length) + 1 + (DIVISION_INSTRUCTION_WEIGHT * arr_length); // Add weighted division operation count
         if (args.min_value_zero)
             for (int i = 0; i < arr_length; ++i)
                 keys[i] = arr[i] / args.divisor;
