@@ -40,7 +40,6 @@ int algorithm_count = 0;                          // Count of sorting algorithms
 
 /**
  * Parses command line arguments to set sorting test parameters.
- *
  * @param argc number of command line arguments
  * @param argv array of command line argument strings
  * @param num_trials pointer to the number of trials
