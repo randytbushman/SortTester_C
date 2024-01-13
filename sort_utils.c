@@ -19,11 +19,11 @@ void clone_array(const int arr[], int copy_arr[], const int arr_length) {
 }
 
 /**
- *
- * @param arr
- * @param arr_length
- * @param max
- * @param instruction_counter
+ * Finds the maximum value in the given array.
+ * @param arr the array to search
+ * @param arr_length the length of the array
+ * @param max a pointer to store the max value
+ * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void find_max(const int arr[], const int arr_length, int *max, unsigned long long int *instruction_counter) {
     int i;
@@ -38,12 +38,12 @@ void find_max(const int arr[], const int arr_length, int *max, unsigned long lon
 }
 
 /**
- *
- * @param arr
- * @param arr_length
- * @param min
- * @param max
- * @param instruction_counter
+ * Finds the minimum and maximum value in the given array.
+ * @param arr the array to search
+ * @param arr_length the length of the array
+ * @param min a pointer to store the minimum value
+ * @param max a pointer to store the maximum value
+ * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void find_min_max(const int arr[], const int arr_length, int *min, int *max, unsigned long long int *instruction_counter) {
     int i;

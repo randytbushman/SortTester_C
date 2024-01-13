@@ -1,9 +1,28 @@
 /**
  * @author: Randolph Bushman
  * @date: 01/12/2024
+ *
  * This program is designed to test and compare the performance of various sorting algorithms. It measures and records
  * the time taken by each algorithm to sort arrays of different sizes, and outputs these measurements in CSV format for
  * further analysis.
+ *
+ * --- Configurations for QR Sort Paper ---
+ *
+ * Figure 5:
+ * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000 --divisor 0 --figure_mode 5 --csv_file B:\c_projects\sort_tester\output_files\fig_5_a.csv
+ * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 500000 --divisor 0 --figure_mode 5 --csv_file B:\c_projects\sort_tester\output_files\fig_5_b.csv
+ * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 5000000 --divisor 0 --figure_mode 5 --csv_file B:\c_projects\sort_tester\output_files\fig_5_c.csv
+ * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000000 --divisor 0 --figure_mode 5 --csv_file B:\c_projects\sort_tester\output_files\fig_5_d.csv
+ *
+ * Figure 6:
+ * --num_trials 10 --initial_length 10 --length_increment 10 --max_length 2000 --min_arr_value 0 --max_arr_value 150000000 --divisor 0 --figure_mode 6 --csv_file B:\c_projects\sort_tester\output_files\fig_6.csv
+ *
+ * Figure 7:
+ * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000 --divisor 16 --figure_mode 7 --csv_file B:\c_projects\sort_tester\output_files\fig_7_a.csv
+ * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 500000 --divisor 16 --figure_mode 7 --csv_file B:\c_projects\sort_tester\output_files\fig_7_b.csv
+ * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 5000000 --divisor 16 --figure_mode 7 --csv_file B:\c_projects\sort_tester\output_files\fig_7_c.csv
+ * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000000 --divisor 16 --figure_mode 7 --csv_file B:\c_projects\sort_tester\output_files\fig_7_d.csv
+ *
  */
 
 #include <stdio.h>
