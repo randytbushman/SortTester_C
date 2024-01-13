@@ -1,20 +1,20 @@
 /**
  * @author: Randolph Bushman
- * @date: 1/10/2024
+ * @date: 1/12/2024
  */
-#include "sort_utils.h"
-#include "sort.h"
+#include "../sort_utils.h"
+#include "../sort.h"
 #include <stdlib.h>
 
 /**
- *
- * @param arr
- * @param keys
- * @param arr_length
- * @param min_value
- * @param exp
- * @param args
- * @param instruction_counter
+ * Computes the sorting keys for each element in the array based on the current digit.
+ * @param arr the elements of which to compute the keys
+ * @param keys array to store the computed keys for sorting
+ * @param arr_length the length of the input array
+ * @param min_value the minimum value in the array
+ * @param exp the exponent representing the current digit being processed
+ * @param args additional sorting arguments
+ * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void compute_keys(const int arr[], int keys[], const int arr_length, const int min_value, const unsigned long long int exp, const SortArgs args, unsigned long long int *instruction_counter) {
     if (args.bitwise_ops) {
@@ -37,47 +37,49 @@ void compute_keys(const int arr[], int keys[], const int arr_length, const int m
 }
 
 /**
- * Performs base-arr_length Radix Sort on the array where arr_length = len(arr).
+ * Performs Radix Sort on the given array.
  * @param arr the array to be sorted
  * @param arr_length the length of the array
- * @param args
+ * @param args additional sorting arguments
+ * @return the total number of instructions executed during the sort.
  */
 unsigned long long int radix_sort(int arr[], const int arr_length, SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
 
+    // Determine the radix (base) for the sorting; defaults to arr_length if not specified
     int radix = (args.radix > 0) ? args.radix : arr_length;
     args.radix = radix;
 
-    // Find min and max array values to get the max_quotient value
+    // Find the minimum and maximum values in the array for range calculation
     int min_value, max_value;
     if (args.min_value_zero) {
         min_value = 0;
         find_max(arr, arr_length, &max_value, &instruction_counter);
     } else
         find_min_max(arr, arr_length, &min_value, &max_value, &instruction_counter);
-    max_value -= min_value;
+    max_value -= min_value;  // Normalize max value based on min value
 
-    // Auxiliary array and keys
+    // Allocate memory for auxiliary array and keys
     int* aux_arr = malloc(arr_length * sizeof(int));
+    int* keys = malloc(arr_length * sizeof(int));
+    int* counting_arr = calloc(radix, sizeof(int));
+
+    // Initialize pointers for swapping arrays
     int* temp_a = arr;
     int* temp_b = aux_arr;
     int* temp = NULL;
 
-    int* keys = malloc(arr_length * sizeof(int));
-    int* counting_arr = calloc(radix, sizeof(int));
-
-    unsigned long long int exp = 1;
-    int is_next_radix = max_value > 0;
+    unsigned long long int exp = 1;  // Exponent to isolate each digit
+    int is_next_radix = max_value > 0;  // Flag to check if another digit is to be sorted
     while (is_next_radix) {
-
-        // Compute the keys for the next least significant digit
+        // Compute the keys for the next iteration
         compute_keys(temp_a, keys, arr_length, min_value, exp, args, &instruction_counter);
-        exp *= radix;
+        exp *= radix;  // Moves to next digit
 
-        instruction_counter += 20;
-        is_next_radix = (max_value / exp) > 0;
+        instruction_counter += DIVISION_INSTRUCTION_WEIGHT;
+        is_next_radix = (max_value / exp) > 0;  // Checks if there is another digit to be sorted after this one
 
-        // Check if there is another radix to iterate over after the current one
+        // Perform counting sort on the keys
         if (!is_next_radix)
             counting_key_sort(temp_a, temp_b, keys, counting_arr, arr_length, radix, arr == temp_a, &instruction_counter);
         else {
@@ -95,7 +97,6 @@ unsigned long long int radix_sort(int arr[], const int arr_length, SortArgs args
         }
     }
 
-    // Free memory
     free(aux_arr);
     free(counting_arr);
     free(keys);

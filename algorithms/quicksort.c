@@ -1,16 +1,17 @@
 /**
  * @author: Randolph Bushman
- * @date: 01/10/2024
+ * @date: 01/12/2024
  */
-#include "sort.h"
-#include "sort_utils.h"
+#include "../sort.h"
 
 /**
- * Partitions the element at end_idx in the given array.
+ * Partitions the element at end_idx in the given array and rearranges the elements so that all elements less than the
+ * pivot are on the left and all elements greater are on the right.
  * @param arr the array to be partitioned
  * @param start_idx the start index where the partitioning is performed on arr
  * @param end_idx the end index where the partitioning is performed on arr
- * @return the new index of the partitioned array value
+ * @param instruction_counter pointer to the counter tracking the number of instructions
+ * @return the new index of the pivot element after partitioning
  */
 int partition(int arr[], const int start_idx, const int end_idx, unsigned long long int* instruction_counter) {
     ++(*instruction_counter);
@@ -26,11 +27,12 @@ int partition(int arr[], const int start_idx, const int end_idx, unsigned long l
 }
 
 /**
- * A helper recursive function used to perform Quicksort from the start_idx index to the end_idx index of the given
- * array.
+ * A helper recursive function that performs the Quicksort algorithm. It divides the array into two parts, and sorts
+ * them independently.
  * @param arr the array to be sorted
- * @param start_idx the start index where Quicksort is performed on arr
- * @param end_idx the end index where Quicksort is performed on arr
+ * @param start_idx the start index of the sub-array to be sorted
+ * @param end_idx the end index of the sub-array to be sorted
+ * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void recursive_quicksort(int arr[], const int start_idx, const int end_idx, unsigned long long int* instruction_counter) {
     if (++(*instruction_counter) && end_idx - start_idx < 1)
@@ -44,6 +46,8 @@ void recursive_quicksort(int arr[], const int start_idx, const int end_idx, unsi
  * Performs Quicksort on the given array.
  * @param arr the array to be sorted
  * @param arr_length the length of the array
+ * @param args additional sorting arguments (not used in this implementation)
+ * @return the total number of instructions executed during the sort
  */
 unsigned long long int quicksort(int arr[], const int arr_length, const SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses

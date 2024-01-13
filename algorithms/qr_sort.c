@@ -1,19 +1,18 @@
 /**
  * @author: Randolph Bushman
- * @date: 1/10/2024
+ * @date: 1/12/2024
  */
-#include "sort.h"
-#include "sort_utils.h"
+#include "../sort.h"
 #include <stdlib.h>
 
 /**
- *
- * @param arr
- * @param keys
- * @param arr_length
- * @param min_value
- * @param args
- * @param instruction_counter
+ * Computes and stores the remainder keys of arr.
+ * @param arr the elements of which to compute the remainder keys
+ * @param keys where the remainder keys are stored
+ * @param arr_length the length of arr
+ * @param min_value the minimum value in arr
+ * @param args additional sorting arguments
+ * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void compute_remainder_keys(const int arr[], int keys[], const int arr_length, const int min_value, const SortArgs args, unsigned long long int *instruction_counter) {
     if (args.bitwise_ops) {
@@ -37,13 +36,13 @@ void compute_remainder_keys(const int arr[], int keys[], const int arr_length, c
 }
 
 /**
- *
- * @param arr
- * @param keys
- * @param arr_length
- * @param min_value
- * @param args
- * @param instruction_counter
+ * Computes and stores the quotient keys of arr.
+ * @param arr the elements of which to compute the quotient keys
+ * @param keys where the quotient keys are stored
+ * @param arr_length the length of arr
+ * @param min_value the minimum value in arr
+ * @param args additional sorting arguments
+ * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void compute_quotient_keys(const int arr[], int keys[], const int arr_length, const int min_value, const SortArgs args, unsigned long long int *instruction_counter) {
     if (args.bitwise_ops) {
@@ -69,14 +68,13 @@ void compute_quotient_keys(const int arr[], int keys[], const int arr_length, co
 }
 
 /**
- *
- * @param arr
- * @param arr_length
- * @param args
- * @return
+ * Performs QR Sort on the given array.
+ * @param arr the array to be sorted
+ * @param arr_length the length of the array
+ * @param args additional sorting arguments
+ * @return the total number of instructions executed during the sort
  */
 unsigned long long int qr_sort(int arr[], const int arr_length, SortArgs args) {
-    // # Total number of comparisons + array accesses + divisor and modulo operations
     unsigned long long int instruction_counter = 0;
 
     // If divisor is not a positive int, assign to arr_length
@@ -92,6 +90,7 @@ unsigned long long int qr_sort(int arr[], const int arr_length, SortArgs args) {
     } else
         find_min_max(arr, arr_length, &min_value, &max_value, &instruction_counter);
     int max_quotient = ((max_value - min_value) / divisor) + 1;
+    instruction_counter += DIVISION_INSTRUCTION_WEIGHT;
 
     // Define auxiliary array and keys
     int* aux_arr = malloc(arr_length * sizeof(int));
@@ -104,9 +103,8 @@ unsigned long long int qr_sort(int arr[], const int arr_length, SortArgs args) {
     // Perform Remainder Sort; Quotient Sort is not necessary if end-early condition is met
     if (max_quotient == 1) {
         counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 1, &instruction_counter);
-    }
-    else {
-        // Remainder Sort
+    } else {
+        // Perform Counting Sort on the Remainder Keys
         counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 0, &instruction_counter);
 
         // Reset counting array
@@ -117,7 +115,7 @@ unsigned long long int qr_sort(int arr[], const int arr_length, SortArgs args) {
         // Compute quotient keys
         compute_quotient_keys(aux_arr, keys, arr_length, min_value, args, &instruction_counter);
 
-        // Quotient Sort
+        // Perform Counting Sort on the Quotient Keys
         counting_key_sort(aux_arr, arr, keys, counting_arr, arr_length, max_quotient, 0, &instruction_counter);
     }
 

@@ -1,18 +1,19 @@
 /**
  * @author: Randolph Bushman
- * @date: 1/10/2024
+ * @date: 1/12/2024
  */
-#include "sort.h"
-#include "sort_utils.h"
+#include "../sort.h"
+#include "../sort_utils.h"
 #include <stdlib.h>
 
 /**
- * Merges two sorted segments of arr from start_idx to mid_idx and mid_idx + 1 to end_idx.
- * @param arr the array where merging is taking place
- * @param aux_arr an auxiliary array used as temporary storage
- * @param start_idx the index that represents the start of the first segment
- * @param mid_idx the index that represents the end of the first segment and the beginning of the second segment
- * @param end_idx the index that represents the end of the second index
+ * Merges two sorted segments of an array. This function is used in merge sort.
+ * @param arr The main array containing the segments to be merged
+ * @param aux_arr An auxiliary array used for merging
+ * @param start_idx The starting index of the first segment
+ * @param mid_idx The ending index of the first segment (and one less than the start of the second segment)
+ * @param end_idx The ending index of the second segment
+ * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void merge(int arr[], int aux_arr[], const int start_idx, const int mid_idx, const int end_idx, unsigned long long int* instruction_counter) {
     int i = start_idx, j = mid_idx + 1, k = start_idx;
@@ -43,9 +44,10 @@ void merge(int arr[], int aux_arr[], const int start_idx, const int mid_idx, con
 /**
  * A helper recursive function used to perform merge sort from the start index to the end index.
  * @param arr the array to be sorted
- * @param aux_arr an auxiliary array used as temporary storage
+ * @param aux_arr an auxiliary array used as temporary storage during sorting
  * @param start_idx the start index where merge sort is performed on arr
- * @param end_idx the end index where Merge Sort is performed on arr
+ * @param end_idx the end index where merge sort is performed on arr
+ * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void merge_sort_recursive(int arr[], int aux_arr[], const int start_idx, const int end_idx, unsigned long long int* instruction_counter) {
     if (++(*instruction_counter) && start_idx < end_idx) {
@@ -60,6 +62,8 @@ void merge_sort_recursive(int arr[], int aux_arr[], const int start_idx, const i
  * Performs recursive Merge Sort on the given array.
  * @param arr the array to be sorted
  * @param arr_length the length of the array
+ * @param args additional sorting arguments (not used in this implementation)
+ * @return the total number of instructions executed during the sort
  */
 unsigned long long int merge_sort(int arr[], const int arr_length, const SortArgs args) {
     unsigned long long int instruction_counter = 0;  // # of comparisons + array accesses
@@ -68,6 +72,3 @@ unsigned long long int merge_sort(int arr[], const int arr_length, const SortArg
     free(aux_array);
     return instruction_counter;
 }
-
-
-

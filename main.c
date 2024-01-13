@@ -1,9 +1,9 @@
 /**
  * @author: Randolph Bushman
- * @date: 01/10/2024
- * This program is designed to test and compare the performance of various sorting algorithms.
- * It measures and records the time taken by each algorithm to sort arrays of different sizes, and outputs these
- * measurements in CSV format for further analysis.
+ * @date: 01/12/2024
+ * This program is designed to test and compare the performance of various sorting algorithms. It measures and records
+ * the time taken by each algorithm to sort arrays of different sizes, and outputs these measurements in CSV format for
+ * further analysis.
  */
 
 #include <stdio.h>
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
     int min_arr_value = 0;              // Minimum value in the arrays
     int max_arr_value = 50000000;       // Maximum value in the arrays
     int divisor = 16;                   // Common divisor for QR Sort optimizations (should be a power of 2)
-    int figure_mode = 5;                     // The number figure_mode to generate
+    int figure_mode = 5;                // The number figure_mode to generate
     char *csv_file = "output.csv";      // Output CSV file
 
     // Parse command line arguments

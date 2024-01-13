@@ -1,12 +1,10 @@
 /**
  * @author: Randolph Bushman
- * @date: 1/10/2024
+ * @date: 1/12/2024
  */
 #include "sort_utils.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-
 
 /**
  * Given a reference array (arr) and an array to clone to (copy_arr), this function copies the values from
@@ -100,7 +98,6 @@ void lin_space(int arr[], const int arr_length, const int min, const int max) {
     arr[arr_length - 1] = max;
     for(int i = 1; i < arr_length - 1; ++i)
         arr[i] = (int) (i * ((max - min) / (double) arr_length)) + arr[0];
-
 }
 
 /**
