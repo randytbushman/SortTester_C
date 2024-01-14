@@ -1,6 +1,6 @@
 /**
  * @author: Randolph Bushman
- * @date: 1/12/2024
+ * @date: 01/12/2024
  */
 #include "../sort.h"
 #include <stdlib.h>
