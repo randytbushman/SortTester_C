@@ -14,7 +14,7 @@ def setup_subplot(ax, x_exponential, y_exponential, x_lim=None, y_lim=None):
     ax.ticklabel_format(style='plain')
     x_label = f"($10^{x_exponential}$)" if x_exponential else ""
     ax.set_xlabel(f"Array Length {x_label}")
-    ax.set_ylabel(r"Computations ($\log_e$ Scale)")  # ($10^{y_exponential}$)")
+    ax.set_ylabel(r"$\log_e$(Computations)")  # ($10^{y_exponential}$)")
     if x_lim is not None:
         ax.set_xlim(x_lim)
     if y_lim is not None:
@@ -59,7 +59,7 @@ def parse_csv(filename):
         return sort_col_list[0], sort_col_list, headers
 
 
-def add_text_to_ax(ax, text, pos_x, pos_y):
+def add_text_to_ax(ax, text, pos_x=.11, pos_y=0.09):
     """
     Adds text to the axes object.
     :param ax: the axes to add text
@@ -68,7 +68,7 @@ def add_text_to_ax(ax, text, pos_x, pos_y):
     :param pos_y:
     :return:
     """
-    ax.text(pos_x, pos_y, text, ha='right', va='top', transform=ax.transAxes,
+    ax.text(pos_x, pos_y, text, ha='left', va='top', transform=ax.transAxes,
             fontsize=12, color='black',
             bbox=dict(facecolor='white', alpha=0.5, edgecolor='none', boxstyle='round,pad=0.1'))
 
@@ -99,7 +99,7 @@ def run_experiments(sort_tester_binary: str, csv_dir: str):
 def main() -> None:
     # Now you would set up the subplots and call your functions
     fig_5, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(14, 10))
-    fig_6, ax5 = plt.subplots(1, 1, figsize=(14, 10))
+    fig_6, ax5 = plt.subplots(1, 1, figsize=(7, 5))
     fig_7, ((ax6, ax7), (ax8, ax9)) = plt.subplots(2, 2, figsize=(14, 10))
 
     # Specify
@@ -134,17 +134,17 @@ def main() -> None:
     ax8.set_title("C")
     ax9.set_title("D")
 
-    add_text_to_ax(ax1, "k = 50,000", .95, .09)
-    add_text_to_ax(ax2, "k = 500,000", .95, .09)
-    add_text_to_ax(ax3, "k = 5,000,000", .95, .09)
-    add_text_to_ax(ax4, "k = 50,000,000", .95, .365)
+    add_text_to_ax(ax1, "k = 50,000")
+    add_text_to_ax(ax2, "k = 500,000")
+    add_text_to_ax(ax3, "k = 5,000,000")
+    add_text_to_ax(ax4, "k = 50,000,000")
 
-    add_text_to_ax(ax5, "k = 150,000,000", .98, .09)
+    add_text_to_ax(ax5, "k = 150,000,000")
 
-    add_text_to_ax(ax6, "k = 50,000", .95, .09)
-    add_text_to_ax(ax7, "k = 500,000", .95, .09)
-    add_text_to_ax(ax8, "k = 5,000,000", .95, .09)
-    add_text_to_ax(ax9, "k = 50,000,000", .95, .26)
+    add_text_to_ax(ax6, "k = 50,000")
+    add_text_to_ax(ax7, "k = 500,000")
+    add_text_to_ax(ax8, "k = 5,000,000")
+    add_text_to_ax(ax9, "k = 50,000,000")
 
     ax4.legend(loc='lower right')
     ax5.legend(loc='lower right')
