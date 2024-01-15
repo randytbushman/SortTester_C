@@ -5,24 +5,6 @@
  * This program is designed to test and compare the performance of various sorting algorithms. It measures and records
  * the time taken by each algorithm to sort arrays of different sizes, and outputs these measurements in CSV format for
  * further analysis.
- *
- * --- Configurations for QR Sort Paper ---
- *
- * Figure 5:
- * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000 --divisor 0 --figure_mode 5 --csv_file B:\c_projects\sort_tester\output_files\fig_5_a.csv
- * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 500000 --divisor 0 --figure_mode 5 --csv_file B:\c_projects\sort_tester\output_files\fig_5_b.csv
- * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 5000000 --divisor 0 --figure_mode 5 --csv_file B:\c_projects\sort_tester\output_files\fig_5_c.csv
- * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000000 --divisor 0 --figure_mode 5 --csv_file B:\c_projects\sort_tester\output_files\fig_5_d.csv
- *
- * Figure 6:
- * --num_trials 10 --initial_length 10 --length_increment 10 --max_length 2000 --min_arr_value 0 --max_arr_value 150000000 --divisor 0 --figure_mode 6 --csv_file B:\c_projects\sort_tester\output_files\fig_6.csv
- *
- * Figure 7:
- * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000 --divisor 16 --figure_mode 7 --csv_file B:\c_projects\sort_tester\output_files\fig_7_a.csv
- * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 500000 --divisor 16 --figure_mode 7 --csv_file B:\c_projects\sort_tester\output_files\fig_7_b.csv
- * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 5000000 --divisor 16 --figure_mode 7 --csv_file B:\c_projects\sort_tester\output_files\fig_7_c.csv
- * --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000000 --divisor 16 --figure_mode 7 --csv_file B:\c_projects\sort_tester\output_files\fig_7_d.csv
- *
  */
 
 #include <stdio.h>
@@ -82,7 +64,7 @@ void parse_arguments(int argc, char *argv[], int *num_trials, int *initial_lengt
  * @param args the arguments that the algorithm takes.
  */
 void add_sorting_method(const char* name, const SortFunc func, const SortArgs args) {
-    sprintf(csv_column_str, "%s, %s", csv_column_str, name);
+    sprintf(csv_column_str, "%s,%s", csv_column_str, name);
     sorting_args[algorithm_count] = args;
     sorting_algorithms[algorithm_count++] = func;
 }
@@ -117,17 +99,17 @@ int main(int argc, char *argv[]) {
         add_sorting_method("Merge Sort", merge_sort, (SortArgs) {});
         add_sorting_method("Quicksort", quicksort, (SortArgs) {});
         add_sorting_method("Counting Sort", counting_sort, (SortArgs) {});
-        add_sorting_method("Radix Sort", radix_sort, (SortArgs) {});
-        add_sorting_method("QR Sort", qr_sort, (SortArgs) {});
+        add_sorting_method("Radix Sort: Radix=Length", radix_sort, (SortArgs) {});
+        add_sorting_method("QR Sort: Divisor=Length", qr_sort, (SortArgs) {});
     } else if (figure_mode == 6) {
-        add_sorting_method("Radix Sort", radix_sort, (SortArgs) {});
-        add_sorting_method("QR Sort", qr_sort, (SortArgs) {});
+        add_sorting_method("Radix Sort: Radix=Length", radix_sort, (SortArgs) {});
+        add_sorting_method("QR Sort: Divisor=Length", qr_sort, (SortArgs) {});
     } else if (figure_mode == 7) {
-        add_sorting_method("QR Sort", qr_sort, (SortArgs) {});
-        add_sorting_method("QR Sort Set Divisor", qr_sort, (SortArgs) {.divisor = divisor});
-        add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
-        add_sorting_method("QR Sort Bitwise", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
-        add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
+        add_sorting_method("QR Sort: Divisor=Length", qr_sort, (SortArgs) {});
+        add_sorting_method("QR Sort: Divisor=16", qr_sort, (SortArgs) {.divisor = divisor});
+        // add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
+        add_sorting_method("QR Sort: Divisor=16 (Bitwise Operations)", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
+        // add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
     }
 
     // Print csv column headers
