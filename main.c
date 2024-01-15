@@ -131,7 +131,6 @@ int main(int argc, char *argv[]) {
     }
 
     // Print csv column headers
-    fprintf(file, "sep=,\n");
     fprintf(file, "%s\n", csv_column_str);
     printf("%s\n", csv_column_str);
 
