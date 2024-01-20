@@ -105,7 +105,7 @@ def main() -> None:
     # Specify
     csv_dir = "output_files"
     figure_dir = "output_figures"
-    #run_experiments(str(Path("./cmake-build-release/sort_tester.exe")), csv_dir)
+    run_experiments(str(Path("./cmake-build-release/sort_tester.exe")), csv_dir)
 
     # You would call the appropriate figure generation function for each subplot
     line_styles = ["-", "-", "-", "-", "-"]
