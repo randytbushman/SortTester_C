@@ -73,12 +73,12 @@ int main(int argc, char *argv[]) {
     srand(0);
 
     // Trial parameters
-    int num_trials = 10;                // Number of trials per array length
-    int initial_length = 1000;          // Initial (smallest) array size to be tested
-    int length_increment = 10000;       // Increment for the next array size after each trial
-    int max_length = 1000000;           // Maximum array size to be tested
+    int num_trials = 100;                // Number of trials per array length
+    int initial_length = 100;          // Initial (smallest) array size to be tested
+    int length_increment = 1000;       // Increment for the next array size after each trial
+    int max_length = 100000;           // Maximum array size to be tested
     int min_arr_value = 0;              // Minimum value in the arrays
-    int max_arr_value = 50000000;       // Maximum value in the arrays
+    int max_arr_value = 5000;       // Maximum value in the arrays
     int divisor = 16;                   // Common divisor for QR Sort optimizations (should be a power of 2)
     int figure_mode = 5;                // The number figure_mode to generate
     char *csv_file = "output.csv";      // Output CSV file
@@ -99,16 +99,16 @@ int main(int argc, char *argv[]) {
         add_sorting_method("Merge Sort", merge_sort, (SortArgs) {});
         add_sorting_method("Quicksort", quicksort, (SortArgs) {});
         add_sorting_method("Counting Sort", counting_sort, (SortArgs) {});
-        add_sorting_method("Radix Sort: Radix=Length", radix_sort, (SortArgs) {});
-        add_sorting_method("QR Sort: Divisor=Length", qr_sort, (SortArgs) {});
+        add_sorting_method("Radix Sort: $b=n$", radix_sort, (SortArgs) {});
+        add_sorting_method("QR Sort: $d=n$", qr_sort, (SortArgs) {});
     } else if (figure_mode == 6) {
-        add_sorting_method("Radix Sort: Radix=Length", radix_sort, (SortArgs) {});
-        add_sorting_method("QR Sort: Divisor=Length", qr_sort, (SortArgs) {});
+        add_sorting_method("Radix Sort: $b=n$", radix_sort, (SortArgs) {});
+        add_sorting_method("QR Sort: $d=n$", qr_sort, (SortArgs) {});
     } else if (figure_mode == 7) {
-        add_sorting_method("QR Sort: Divisor=Length", qr_sort, (SortArgs) {});
-        add_sorting_method("QR Sort: Divisor=16", qr_sort, (SortArgs) {.divisor = divisor});
+        add_sorting_method("QR Sort: $d=n$", qr_sort, (SortArgs) {});
+        add_sorting_method("QR Sort: $d=2^{16}$", qr_sort, (SortArgs) {.divisor = divisor});
         // add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
-        add_sorting_method("QR Sort: Divisor=16 (Bitwise Operations)", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
+        add_sorting_method("QR Sort: $d=2^{16}$ (Bitwise Operations)", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
         // add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
     }
 

@@ -11,11 +11,17 @@
  * @param keys where the remainder keys are stored
  * @param arr_length the length of arr
  * @param min_value the minimum value in arr
+ * @param max_quotient
  * @param args additional sorting arguments
  * @param instruction_counter pointer to the counter tracking the number of instructions
  */
-void compute_remainder_keys(const int arr[], int keys[], const int arr_length, const int min_value, const SortArgs args, unsigned long long int *instruction_counter) {
-    if (args.bitwise_ops) {
+void compute_remainder_keys(const int arr[], int keys[], const int arr_length, const int min_value, const int max_quotient, const SortArgs args, unsigned long long int *instruction_counter) {
+    if (max_quotient == 1) {  // If the max quotient equals zero, then the remainder(a[i] - min_value) == a[i] - min_value
+        *instruction_counter += (3 * arr_length) + 1;
+        for (int i = 0; i < arr_length; ++i)
+            keys[i] = arr[i] - min_value;
+    } else
+    if (args.bitwise_ops) {  // Use bitwise operations to compute the remainders
         *instruction_counter += (4 * arr_length) + 1;
         if (args.min_value_zero)
             for (int i = 0; i < arr_length; ++i)
@@ -23,8 +29,7 @@ void compute_remainder_keys(const int arr[], int keys[], const int arr_length, c
         else
             for (int i = 0; i < arr_length; ++i)
                 keys[i] = (arr[i] - min_value) & (args.divisor - 1);
-    }
-    else {
+    } else {
         *instruction_counter += (3 * arr_length) + 1 + (DIVISION_INSTRUCTION_WEIGHT * arr_length);  // Add weighted modulo operation count
         if (args.min_value_zero)
             for (int i = 0; i < arr_length; ++i)
@@ -47,15 +52,12 @@ void compute_remainder_keys(const int arr[], int keys[], const int arr_length, c
 void compute_quotient_keys(const int arr[], int keys[], const int arr_length, const int min_value, const SortArgs args, unsigned long long int *instruction_counter) {
     if (args.bitwise_ops) {
         *instruction_counter += (4 * arr_length) + 1;
-        if (args.min_value_zero) {
-            for (int i = 0; i < arr_length; ++i) {
+        if (args.min_value_zero)
+            for (int i = 0; i < arr_length; ++i)
                 keys[i] = arr[i] >> __builtin_ctz(args.divisor); // Bitwise shift for power of 2 divisor
-            }
-        } else {
-            for (int i = 0; i < arr_length; ++i) {
+        else
+            for (int i = 0; i < arr_length; ++i)
                 keys[i] = (arr[i] - min_value) >> __builtin_ctz(args.divisor); // Bitwise shift for power of 2 divisor
-            }
-        }
     } else {
         *instruction_counter += (3 * arr_length) + 1 + (DIVISION_INSTRUCTION_WEIGHT * arr_length); // Add weighted division operation count
         if (args.min_value_zero)
@@ -77,50 +79,53 @@ void compute_quotient_keys(const int arr[], int keys[], const int arr_length, co
 unsigned long long int qr_sort(int arr[], const int arr_length, SortArgs args) {
     unsigned long long int instruction_counter = 0;
 
+    // Find min and max array values to get the max_quotient value
+    int min_value = 0, max_value = 0;
+    if (args.min_value_zero)
+        find_max(arr, arr_length, &max_value, &instruction_counter);
+    else
+        find_min_max(arr, arr_length, &min_value, &max_value, &instruction_counter);
+
     // If divisor is not a positive int, assign to arr_length
     if (args.divisor <= 0)
-        args.divisor = arr_length;
+        args.divisor = (arr_length < max_value - min_value + 1) ? arr_length : max_value - min_value + 1;
     int divisor = args.divisor;
 
-    // Find min and max array values to get the max_quotient value
-    int min_value, max_value;
-    if (args.min_value_zero) {
-        min_value = 0;
-        find_max(arr, arr_length, &max_value, &instruction_counter);
-    } else
-        find_min_max(arr, arr_length, &min_value, &max_value, &instruction_counter);
     int max_quotient = ((max_value - min_value) / divisor) + 1;
     instruction_counter += DIVISION_INSTRUCTION_WEIGHT;
 
-    // Define auxiliary array and keys
+    // Define auxiliary array and counting array
     int* aux_arr = malloc(arr_length * sizeof(int));
     int* counting_arr = calloc(divisor > max_quotient ? divisor : max_quotient, sizeof(int));
-    int* keys = malloc(arr_length * sizeof(int));
 
-    // Compute remainder keys
-    compute_remainder_keys(arr, keys, arr_length, min_value, args, &instruction_counter);
+    // Additional key space is not required
+    if (max_quotient == 1 && min_value == 0)
+        counting_key_sort(arr, aux_arr, arr, counting_arr, arr_length, divisor, 1, &instruction_counter);
+    else {
+        int* keys = malloc(arr_length * sizeof(int));
+        compute_remainder_keys(arr, keys, arr_length, min_value, max_quotient, args, &instruction_counter);
 
-    // Perform Remainder Sort; Quotient Sort is not necessary if end-early condition is met
-    if (max_quotient == 1) {
-        counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 1, &instruction_counter);
-    } else {
-        // Perform Counting Sort on the Remainder Keys
-        counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 0, &instruction_counter);
+        if (max_quotient == 1)
+            counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 1, &instruction_counter);
+        else {
+            // Perform Counting Sort on the Remainder Keys
+            counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 0, &instruction_counter);
 
-        // Reset counting array
-        instruction_counter += 2 * (divisor > max_quotient ? max_quotient : divisor) + 1;
-        for(int i = 0; i < (divisor > max_quotient ? max_quotient : divisor); ++i)
-            counting_arr[i] = 0;
+            // Reset counting array
+            instruction_counter += 2 * (divisor > max_quotient ? max_quotient : divisor) + 1;
+            for(int i = 0; i < (divisor > max_quotient ? max_quotient : divisor); ++i)
+                counting_arr[i] = 0;
 
-        // Compute quotient keys
-        compute_quotient_keys(aux_arr, keys, arr_length, min_value, args, &instruction_counter);
+            // Compute quotient keys
+            compute_quotient_keys(aux_arr, keys, arr_length, min_value, args, &instruction_counter);
 
-        // Perform Counting Sort on the Quotient Keys
-        counting_key_sort(aux_arr, arr, keys, counting_arr, arr_length, max_quotient, 0, &instruction_counter);
+            // Perform Counting Sort on the Quotient Keys
+            counting_key_sort(aux_arr, arr, keys, counting_arr, arr_length, max_quotient, 0, &instruction_counter);
+        }
+        free(keys);
     }
 
     free(aux_arr);
     free(counting_arr);
-    free(keys);
     return instruction_counter;
 }

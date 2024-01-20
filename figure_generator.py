@@ -81,19 +81,19 @@ def run_experiments(sort_tester_binary: str, csv_dir: str):
     print("Running experiments...")
     with ProcessPoolExecutor() as executor:
         # Figure 5 generation
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000 --divisor 0 --figure_mode 5 --csv_file {os.path.join(csv_dir, 'fig_5_a.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 500000 --divisor 0 --figure_mode 5 --csv_file {os.path.join(csv_dir, 'fig_5_b.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 5000000 --divisor 0 --figure_mode 5 --csv_file {os.path.join(csv_dir, 'fig_5_c.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000000 --divisor 0 --figure_mode 5 --csv_file {os.path.join(csv_dir, 'fig_5_d.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000 --divisor 0 --figure_mode 5 --csv_file {os.path.join(csv_dir, 'fig_3_a.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 500000 --divisor 0 --figure_mode 5 --csv_file {os.path.join(csv_dir, 'fig_3_b.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 5000000 --divisor 0 --figure_mode 5 --csv_file {os.path.join(csv_dir, 'fig_3_c.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000000 --divisor 0 --figure_mode 5 --csv_file {os.path.join(csv_dir, 'fig_3_d.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
 
         # Figure 6 generation
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10 --length_increment 10 --max_length 5000 --min_arr_value 0 --max_arr_value 150000000 --divisor 0 --figure_mode 6 --csv_file {os.path.join(csv_dir, 'fig_6.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10 --length_increment 10 --max_length 5000 --min_arr_value 0 --max_arr_value 150000000 --divisor 0 --figure_mode 6 --csv_file {os.path.join(csv_dir, 'fig_4.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
 
         # Figure 7 generation
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000 --divisor 16 --figure_mode 7 --csv_file {os.path.join(csv_dir, 'fig_7_a.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 500000 --divisor 16 --figure_mode 7 --csv_file {os.path.join(csv_dir, 'fig_7_b.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 5000000 --divisor 16 --figure_mode 7 --csv_file {os.path.join(csv_dir, 'fig_7_c.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
-        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000000 --divisor 16 --figure_mode 7 --csv_file {os.path.join(csv_dir, 'fig_7_d.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000 --divisor 16 --figure_mode 7 --csv_file {os.path.join(csv_dir, 'fig_5_a.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 500000 --divisor 16 --figure_mode 7 --csv_file {os.path.join(csv_dir, 'fig_5_b.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 5000000 --divisor 16 --figure_mode 7 --csv_file {os.path.join(csv_dir, 'fig_5_c.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
+        experiments.append(executor.submit(subprocess.run, f"{sort_tester_binary} --num_trials 10 --initial_length 10000 --length_increment 10000 --max_length 1000000 --min_arr_value 0 --max_arr_value 50000000 --divisor 16 --figure_mode 7 --csv_file {os.path.join(csv_dir, 'fig_5_d.csv')}", shell=True, check=True, stdout=subprocess.DEVNULL))
 
 
 def main() -> None:
@@ -105,24 +105,24 @@ def main() -> None:
     # Specify
     csv_dir = "output_files"
     figure_dir = "output_figures"
-    # run_experiments(str(Path("./cmake-build-release/sort_tester.exe")), csv_dir)
+    #run_experiments(str(Path("./cmake-build-release/sort_tester.exe")), csv_dir)
 
     # You would call the appropriate figure generation function for each subplot
     line_styles = ["-", "-", "-", "-", "-"]
-    generate_subplot_figure(ax1, f"{csv_dir}/fig_5_a.csv", 3, 9, None, None, line_styles)
-    generate_subplot_figure(ax2, f"{csv_dir}/fig_5_b.csv", 3, 9, None, None, line_styles)
-    generate_subplot_figure(ax3, f"{csv_dir}/fig_5_c.csv", 3, 9, None, None, line_styles)
-    generate_subplot_figure(ax4, f"{csv_dir}/fig_5_d.csv", 3, 9, None, None, line_styles)
+    generate_subplot_figure(ax1, f"{csv_dir}/fig_3_a.csv", 3, 9, None, None, line_styles)
+    generate_subplot_figure(ax2, f"{csv_dir}/fig_3_b.csv", 3, 9, None, None, line_styles)
+    generate_subplot_figure(ax3, f"{csv_dir}/fig_3_c.csv", 3, 9, None, None, line_styles)
+    generate_subplot_figure(ax4, f"{csv_dir}/fig_3_d.csv", 3, 9, None, None, line_styles)
 
     line_styles = ["-"] * 5
-    generate_subplot_figure(ax5, f"{csv_dir}/fig_6.csv", 0, 9, None, None, line_styles[-2:], colors=["C3", "C4"])
+    generate_subplot_figure(ax5, f"{csv_dir}/fig_4.csv", 0, 9, None, None, line_styles[-2:], colors=["C3", "C4"])
 
     line_styles = ["-"] * 5
     colors = ["C4", "C0", "C1"]
-    generate_subplot_figure(ax6, f"{csv_dir}/fig_7_a.csv", 3, 9, None, None, line_styles, colors)
-    generate_subplot_figure(ax7, f"{csv_dir}/fig_7_b.csv", 3, 9, None, None, line_styles, colors)
-    generate_subplot_figure(ax8, f"{csv_dir}/fig_7_c.csv", 3, 9, None, None, line_styles, colors)
-    generate_subplot_figure(ax9, f"{csv_dir}/fig_7_d.csv", 3, 9, None, None, line_styles, colors)
+    generate_subplot_figure(ax6, f"{csv_dir}/fig_5_a.csv", 3, 9, None, None, line_styles, colors)
+    generate_subplot_figure(ax7, f"{csv_dir}/fig_5_b.csv", 3, 9, None, None, line_styles, colors)
+    generate_subplot_figure(ax8, f"{csv_dir}/fig_5_c.csv", 3, 9, None, None, line_styles, colors)
+    generate_subplot_figure(ax9, f"{csv_dir}/fig_5_d.csv", 3, 9, None, None, line_styles, colors)
 
     ax1.set_title("A")
     ax2.set_title("B")
@@ -156,9 +156,9 @@ def main() -> None:
     fig_7.tight_layout()
 
     # Save the entire figure
-    fig_5.savefig(f"{figure_dir}/figure_5.png", dpi=600)
-    fig_6.savefig(f"{figure_dir}/figure_6.png", dpi=600)
-    fig_7.savefig(f"{figure_dir}/figure_7.png", dpi=600)
+    fig_5.savefig(f"{figure_dir}/figure_3.png", dpi=600)
+    fig_6.savefig(f"{figure_dir}/figure_4.png", dpi=600)
+    fig_7.savefig(f"{figure_dir}/figure_5.png", dpi=600)
 
     # Show figures
     fig_5.show()
