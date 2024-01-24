@@ -16,11 +16,6 @@
  * @param instruction_counter pointer to the counter tracking the number of instructions
  */
 void compute_remainder_keys(const int arr[], int keys[], const int arr_length, const int min_value, const int max_quotient, const SortArgs args, unsigned long long int *instruction_counter) {
-    if (max_quotient == 1) {  // If the max quotient equals zero, then the remainder(a[i] - min_value) == a[i] - min_value
-        *instruction_counter += (3 * arr_length) + 1;
-        for (int i = 0; i < arr_length; ++i)
-            keys[i] = arr[i] - min_value;
-    } else
     if (args.bitwise_ops) {  // Use bitwise operations to compute the remainders
         *instruction_counter += (4 * arr_length) + 1;
         if (args.min_value_zero)
@@ -97,35 +92,27 @@ unsigned long long int qr_sort(int arr[], const int arr_length, SortArgs args) {
     // Define auxiliary array and counting array
     int* aux_arr = malloc(arr_length * sizeof(int));
     int* counting_arr = calloc(divisor > max_quotient ? divisor : max_quotient, sizeof(int));
+    int* keys = malloc(arr_length * sizeof(int));
+    compute_remainder_keys(arr, keys, arr_length, min_value, max_quotient, args, &instruction_counter);
 
-    // Additional key space is not required
-    if (max_quotient == 1 && min_value == 0)
-        counting_key_sort(arr, aux_arr, arr, counting_arr, arr_length, divisor, 1, &instruction_counter);
+    if (max_quotient == 1)
+        counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 1, &instruction_counter);
     else {
-        int* keys = malloc(arr_length * sizeof(int));
-        compute_remainder_keys(arr, keys, arr_length, min_value, max_quotient, args, &instruction_counter);
+        counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 0,
+                          &instruction_counter);  // Perform Counting Sort on the Remainder Keys
 
-        if (max_quotient == 1)
-            counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 1, &instruction_counter);
-        else {
-            // Perform Counting Sort on the Remainder Keys
-            counting_key_sort(arr, aux_arr, keys, counting_arr, arr_length, divisor, 0, &instruction_counter);
+        instruction_counter += 2 * (divisor > max_quotient ? max_quotient : divisor) + 1;
+        for (int i = 0; i < (divisor > max_quotient ? max_quotient : divisor); ++i)  // Reset Counting Array
+            counting_arr[i] = 0;
 
-            // Reset counting array
-            instruction_counter += 2 * (divisor > max_quotient ? max_quotient : divisor) + 1;
-            for(int i = 0; i < (divisor > max_quotient ? max_quotient : divisor); ++i)
-                counting_arr[i] = 0;
-
-            // Compute quotient keys
-            compute_quotient_keys(aux_arr, keys, arr_length, min_value, args, &instruction_counter);
-
-            // Perform Counting Sort on the Quotient Keys
-            counting_key_sort(aux_arr, arr, keys, counting_arr, arr_length, max_quotient, 0, &instruction_counter);
-        }
-        free(keys);
+        // Compute, then sort quotient keys
+        compute_quotient_keys(aux_arr, keys, arr_length, min_value, args, &instruction_counter);
+        counting_key_sort(aux_arr, arr, keys, counting_arr, arr_length, max_quotient, 0, &instruction_counter);
     }
+
 
     free(aux_arr);
     free(counting_arr);
+    free(keys);
     return instruction_counter;
 }
