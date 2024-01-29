@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
         add_sorting_method("QR Sort: $d=n$", qr_sort, (SortArgs) {});
         add_sorting_method("QR Sort: $d=2^{16}$", qr_sort, (SortArgs) {.divisor = divisor});
         // add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
-        add_sorting_method("QR Sort: $d=2^{16}$ (Bitwise Operations)", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
+        add_sorting_method("QR Sort: $d=2^{16}$ (Bitwise)", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
         // add_sorting_method("QR Sort Bitwise Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1, .min_value_zero = 1});
     }
 

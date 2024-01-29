@@ -1,4 +1,4 @@
-Array Length,QR Sort: $d=n$,QR Sort: $d=2^{16}$,QR Sort: $d=2^{16}$ (Bitwise Operations)
+Array Length,QR Sort: $d=n$,QR Sort: $d=2^{16}$,QR Sort: $d=2^{16}$ (Bitwise)
 10000, 605039800, 9925117800, 9645117800
 20000, 1172544000, 10475122000, 9915122000
 30000, 1748371600, 11025119600, 10185119600

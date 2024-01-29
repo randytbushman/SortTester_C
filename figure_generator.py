@@ -105,7 +105,7 @@ def main() -> None:
     # Specify
     csv_dir = "output_files"
     figure_dir = "output_figures"
-    run_experiments(str(Path("./cmake-build-release/sort_tester.exe")), csv_dir)
+    # run_experiments(str(Path("./cmake-build-release/sort_tester.exe")), csv_dir)
 
     # You would call the appropriate figure generation function for each subplot
     line_styles = ["-", "-", "-", "-", "-"]
@@ -146,9 +146,9 @@ def main() -> None:
     add_text_to_ax(ax8, "k = 5,000,000")
     add_text_to_ax(ax9, "k = 50,000,000")
 
-    ax4.legend(loc='lower right')
-    ax5.legend(loc='lower right')
-    ax9.legend(loc='lower right')
+    ax4.legend(loc='lower right', fontsize=15)
+    ax5.legend(loc='lower right', fontsize=9)
+    ax9.legend(loc='lower right', fontsize=15)
 
     # Apply tight layout
     fig_5.tight_layout()
