@@ -73,18 +73,18 @@ int main(int argc, char *argv[]) {
     srand(0);
 
     // Trial parameters
-    int num_trials = 100;                // Number of trials per array length
-    int initial_length = 100;          // Initial (smallest) array size to be tested
-    int length_increment = 1000;       // Increment for the next array size after each trial
+    int min_length = 100;          // Initial (smallest) array size to be tested
     int max_length = 100000;           // Maximum array size to be tested
-    int min_arr_value = 0;              // Minimum value in the arrays
-    int max_arr_value = 5000;       // Maximum value in the arrays
+    int length_increment = 1000;       // Increment for the next array size after each trial
+    int min_value = 0;              // Minimum value in the arrays
+    int max_value = 5000;       // Maximum value in the arrays
+    int trial_cont = 100;                // Number of trials per array length
     int divisor = 16;                   // Common divisor for QR Sort optimizations (should be a power of 2)
     int figure_mode = 5;                // The number figure_mode to generate
     char *csv_file = "output.csv";      // Output CSV file
 
     // Parse command line arguments
-    parse_arguments(argc, argv, &num_trials, &initial_length, &length_increment, &max_length, &min_arr_value, &max_arr_value, &divisor, &figure_mode, &csv_file);
+    parse_arguments(argc, argv, &trial_cont, &min_length, &length_increment, &max_length, &min_value, &max_value, &divisor, &figure_mode, &csv_file);
 
     // Open the CSV file for writing
     FILE *file = fopen(csv_file, "w");
@@ -100,12 +100,12 @@ int main(int argc, char *argv[]) {
         add_sorting_method("Quicksort", quicksort, (SortArgs) {});
         add_sorting_method("Counting Sort", counting_sort, (SortArgs) {});
         add_sorting_method("Radix Sort: $b=n$", radix_sort, (SortArgs) {});
-        add_sorting_method("QR Sort: $d=n$", qr_sort, (SortArgs) {});
+        add_sorting_method("QR Sort: $d=\\sqrt{m}$", qr_sort, (SortArgs) {});
     } else if (figure_mode == 6) {
         add_sorting_method("Radix Sort: $b=n$", radix_sort, (SortArgs) {});
         add_sorting_method("QR Sort: $d=n$", qr_sort, (SortArgs) {});
     } else if (figure_mode == 7) {
-        add_sorting_method("QR Sort: $d=n$", qr_sort, (SortArgs) {});
+        add_sorting_method("QR Sort: d=\\sqrt{m}$", qr_sort, (SortArgs) {});
         add_sorting_method("QR Sort: $d=2^{16}$", qr_sort, (SortArgs) {.divisor = divisor});
         // add_sorting_method("QR Sort Min Value Zero", qr_sort, (SortArgs) {.divisor = divisor, .min_value_zero = 1});
         add_sorting_method("QR Sort: $d=2^{16}$ (Bitwise)", qr_sort, (SortArgs) {.divisor = divisor, .bitwise_ops = 1});
@@ -121,11 +121,11 @@ int main(int argc, char *argv[]) {
     int *copy_arr = malloc(max_length * sizeof(int)); // Copy of the array for sorting
 
     // Run sorting tests
-    for (int arr_length = initial_length; arr_length <= max_length; arr_length += length_increment) {
-        lin_space(arr, arr_length, min_arr_value, max_arr_value); // Populate arr with linearly spaced values
+    for (int arr_length = min_length; arr_length <= max_length; arr_length += length_increment) {
+        lin_space(arr, arr_length, min_value, max_value); // Populate arr with linearly spaced values
 
         // Perform trials for each algorithm
-        for (int i = 0; i < num_trials; ++i) {
+        for (int i = 0; i < trial_cont; ++i) {
             shuffle(arr, arr_length);  // Shuffle the array for each trial
 
             // Test each algorithm
@@ -139,8 +139,8 @@ int main(int argc, char *argv[]) {
         fprintf(file, "%d", arr_length);
         printf("%d", arr_length);
         for (int i = 0; i < algorithm_count; ++i) {
-            fprintf(file, ", %llu", 1000 * algorithm_times[i] / num_trials);
-            printf( ", %llu", 1000 * algorithm_times[i] / num_trials);
+            fprintf(file, ", %llu", 1000 * algorithm_times[i] / trial_cont);
+            printf( ", %llu", 1000 * algorithm_times[i] / trial_cont);
             algorithm_times[i] = 0;  // Reset time for the next trial
         }
         fprintf(file, "\n");

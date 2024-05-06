@@ -134,17 +134,17 @@ def main() -> None:
     ax8.set_title("C")
     ax9.set_title("D")
 
-    add_text_to_ax(ax1, "k = 50,000")
-    add_text_to_ax(ax2, "k = 500,000")
-    add_text_to_ax(ax3, "k = 5,000,000")
-    add_text_to_ax(ax4, "k = 50,000,000")
+    add_text_to_ax(ax1, "m = 50,000")
+    add_text_to_ax(ax2, "m = 500,000")
+    add_text_to_ax(ax3, "m = 5,000,000")
+    add_text_to_ax(ax4, "m = 50,000,000")
 
-    add_text_to_ax(ax5, "k = 150,000,000")
+    add_text_to_ax(ax5, "m = 150,000,000")
 
-    add_text_to_ax(ax6, "k = 50,000")
-    add_text_to_ax(ax7, "k = 500,000")
-    add_text_to_ax(ax8, "k = 5,000,000")
-    add_text_to_ax(ax9, "k = 50,000,000")
+    add_text_to_ax(ax6, "m = 50,000")
+    add_text_to_ax(ax7, "m = 500,000")
+    add_text_to_ax(ax8, "m = 5,000,000")
+    add_text_to_ax(ax9, "m = 50,000,000")
 
     ax4.legend(loc='lower right', fontsize=15)
     ax5.legend(loc='lower right', fontsize=9)

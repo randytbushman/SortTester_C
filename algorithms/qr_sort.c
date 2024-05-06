@@ -4,6 +4,7 @@
  */
 #include "../sort.h"
 #include <stdlib.h>
+#include "math.h"
 
 /**
  * Computes and stores the remainder keys of arr.
@@ -83,7 +84,7 @@ unsigned long long int qr_sort(int arr[], const int arr_length, SortArgs args) {
 
     // If divisor is not a positive int, assign to arr_length
     if (args.divisor <= 0)
-        args.divisor = (arr_length < max_value - min_value + 1) ? arr_length : max_value - min_value + 1;
+        args.divisor = ceil(sqrt(max_value - min_value + 1)); // (arr_length < max_value - min_value + 1) ? arr_length : max_value - min_value + 1;
     int divisor = args.divisor;
 
     int max_quotient = ((max_value - min_value) / divisor) + 1;
